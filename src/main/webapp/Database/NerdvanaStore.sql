@@ -358,11 +358,11 @@ VALUES
 -- ========================================
 INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url)
 VALUES
-('A1001', 'One Piece Volume 1', 'Manga', 7.99, 50, 'Primo volume del manga One Piece.', 'http://example.com/onepiece1.jpg'),
-('A1002', 'Batman: Year One', 'Fumetti', 15.50, 30, 'Graphic novel di Frank Miller.', 'http://example.com/batman-yearone.jpg'),
-('A1003', 'Catan', 'BoardGame', 39.99, 20, 'Gioco da tavolo strategico.', 'http://example.com/catan.jpg'),
-('A1004', 'Funko Pop! Pikachu', 'Funko', 12.99, 40, 'Figure da collezione Pokémon.', 'http://example.com/funko-pikachu.jpg'),
-('A1005', 'The Last of Us Part II', 'Videogiochi', 59.90, 15, 'Videogioco per PS4.', 'http://example.com/tlou2.jpg');
+('A1001', 'One Piece Volume 1', 'Manga', 7.99, 50, 'Primo volume del manga One Piece.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/onePiece1.jpg'),
+('A1002', 'Batman: Year One', 'Fumetti', 15.50, 30, 'Graphic novel di Frank Miller.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/batmanYeatOne.jpg'),
+('A1003', 'Catan', 'BoardGame', 39.99, 20, 'Gioco da tavolo strategico.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/catanBordGame.jpg'),
+('A1004', 'Funko Pop! Pikachu', 'Funko', 12.99, 40, 'Figure da collezione Pokémon.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/FunkoPop!Pikachu.jpg'),
+('A1005', 'The Last of Us Part II', 'Videogiochi', 59.90, 15, 'Videogioco per PS4.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/The Last of Us Part II.jpg');
 
 -- ========================================
 -- ORDINE
