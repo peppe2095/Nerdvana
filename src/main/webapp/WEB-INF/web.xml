@@ -1,22 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-    id="WebApp_ID" version="3.1">
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         id="WebApp_ID" version="3.1">
 
+    <!-- Servlet per getArticoli -->
+    <servlet>
+        <servlet-name>getArticoli</servlet-name>
+        <servlet-class>Control.getArticoli</servlet-class>
+    </servlet>
 
-  <servlet>
-    <servlet-name>userServlet</servlet-name>
-    <servlet-class>Control.userServlet</servlet-class>
-  </servlet>
+    <servlet-mapping>
+        <servlet-name>getArticoli</servlet-name>
+        <url-pattern>/getArticoli</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>userServlet</servlet-name>
-    <url-pattern>/users</url-pattern>
-  </servlet-mapping>
+    <!-- Auth servlet -->
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>Control.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/api/auth/*</url-pattern>
+    </servlet-mapping>
 
+    <!-- Carrello servlet -->
+    <servlet>
+        <servlet-name>CarrelloServlet</servlet-name>
+        <servlet-class>Control.CarrelloServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CarrelloServlet</servlet-name>
+        <url-pattern>/api/cart/*</url-pattern>
+    </servlet-mapping>
 
-<welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-</welcome-file-list>
+    <!-- Wishlist servlet -->
+    <servlet>
+        <servlet-name>WishlistServlet</servlet-name>
+        <servlet-class>Control.WishlistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WishlistServlet</servlet-name>
+        <url-pattern>/api/wishlist/*</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

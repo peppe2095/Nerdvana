@@ -21,6 +21,83 @@ public class ArticoloDao {
         this.connection = connection;
     }
 
+    // Recupero paginato con filtro opzionale per tipo
+    // page parte da 1, size > 0
+    public List<Articolo> getArticoliPaged(int page, int size, Tipo tipo) throws SQLException {
+        if (size <= 0) size = 8;
+        if (page <= 0) page = 1;
+        int offset = (page - 1) * size;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Articolo> articoli = new ArrayList<>();
+        try {
+            String base = "SELECT * FROM ARTICOLO";
+            String where = (tipo != null) ? " WHERE tipo = ?" : "";
+            String orderLimit = " ORDER BY id LIMIT ? OFFSET ?";
+            String sql = base + where + orderLimit;
+            ps = connection.prepareStatement(sql);
+            int idx = 1;
+            if (tipo != null) {
+                ps.setString(idx++, tipo.name());
+            }
+            ps.setInt(idx++, size);
+            ps.setInt(idx, offset);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Articolo articolo = new Articolo();
+                articolo.setId(rs.getInt("id"));
+                articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
+                articolo.setNome(rs.getString("nome"));
+                articolo.setTipo(Tipo.valueOf(rs.getString("tipo")));
+                articolo.setPrezzo(rs.getDouble("prezzo"));
+                articolo.setQuantita(rs.getInt("quantita"));
+                articolo.setDescrizione(rs.getString("descrizione"));
+                articolo.setUrl(rs.getString("url"));
+                articoli.add(articolo);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Errore nel recupero paginato degli articoli", e);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return articoli;
+    }
+
+    // Conta totale articoli con filtro opzionale per tipo
+    public int countArticoli(Tipo tipo) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String base = "SELECT COUNT(*) FROM ARTICOLO";
+            String where = (tipo != null) ? " WHERE tipo = ?" : "";
+            String sql = base + where;
+            ps = connection.prepareStatement(sql);
+            if (tipo != null) {
+                ps.setString(1, tipo.name());
+            }
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new SQLException("Errore nel conteggio degli articoli", e);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // Metodo per salvare un nuovo articolo nel database
     public void addArticolo(Articolo articolo) throws SQLException {
     	//PreparedStatement serve per convertiree la query in un formato comprensibile per il database, viene sempre messa a inizio metodo nei dao
@@ -68,6 +145,7 @@ public class ArticoloDao {
 
             if (rs.next()) {
                 articolo = new Articolo();
+                articolo.setId(rs.getInt("id"));
                 articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
                 articolo.setNome(rs.getString("nome"));
                 articolo.setTipo(Tipo.valueOf(rs.getString("tipo")));
@@ -102,6 +180,7 @@ public class ArticoloDao {
 
             while (rs.next()) {
                 Articolo articolo = new Articolo();
+                articolo.setId(rs.getInt("id"));
                 articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
                 articolo.setNome(rs.getString("nome"));
                 articolo.setTipo(Tipo.valueOf(rs.getString("tipo")));
@@ -177,5 +256,38 @@ public class ArticoloDao {
                 e.printStackTrace();
             }
         }
+    }
+    // Metodo per recuperare un articolo tramite il suo numero seriale (chiave "business")
+    public Articolo getArticoloByNumeroSeriale(String numeroSeriale) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Articolo articolo = null;
+        try {
+            String sql = "SELECT * FROM ARTICOLO WHERE numeroSeriale = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, numeroSeriale);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                articolo = new Articolo();
+                articolo.setId(rs.getInt("id"));
+                articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
+                articolo.setNome(rs.getString("nome"));
+                articolo.setTipo(Tipo.valueOf(rs.getString("tipo")));
+                articolo.setPrezzo(rs.getDouble("prezzo"));
+                articolo.setQuantita(rs.getInt("quantita"));
+                articolo.setDescrizione(rs.getString("descrizione"));
+                articolo.setUrl(rs.getString("url"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Errore nel recupero dell'articolo per numero seriale", e);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return articolo;
     }
 }

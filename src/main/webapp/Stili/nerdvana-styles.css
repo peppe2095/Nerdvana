@@ -1,5 +1,7 @@
 /* Nerdvana Global Styles */
 
+/* PER IL CSS MI SONO UN PO' AIUTATO CON CLAUDE*/
+
 :root {
     --primary-color: #ff6b35;
     --secondary-color: #f7931e;
@@ -22,7 +24,6 @@
     --border-radius-pill: 50px;
 }
 
-/* Reset e Base */
 * {
     margin: 0;
     padding: 0;
@@ -286,6 +287,23 @@ a:hover {
     animation: bounceIn 1s ease-out;
 }
 
+/* Navbar tweaks */
+.navbar-brand img {
+    height: 32px;
+}
+
+/* Hero */
+#heroCarousel img {
+    max-height: 360px;
+    object-fit: cover;
+}
+
+/* Products */
+.product-img {
+    height: 180px;
+    object-fit: cover;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .container {
@@ -300,17 +318,17 @@ a:hover {
     h2 { font-size: 1.75rem; }
     h3 { font-size: 1.5rem; }
     h4 { font-size: 1.25rem; }
-    
+
     .btn-nerdvana,
     .btn-outline-nerdvana {
         padding: 10px 20px;
         font-size: 0.9rem;
     }
-    
+
     .card-body-nerdvana {
         padding: 15px;
     }
-    
+
     .form-control-nerdvana {
         padding: 10px 12px;
         font-size: 0.9rem;
@@ -322,10 +340,10 @@ a:hover {
         padding-left: 15px;
         padding-right: 15px;
     }
-    
+
     h1 { font-size: 1.75rem; }
     h2 { font-size: 1.5rem; }
-    
+
     .btn-nerdvana,
     .btn-outline-nerdvana {
         width: 100%;
@@ -362,12 +380,12 @@ html {
     .no-print {
         display: none !important;
     }
-    
+
     body {
         color: black !important;
         background: white !important;
     }
-    
+
     .card-nerdvana {
         border: 1px solid #ccc !important;
         box-shadow: none !important;

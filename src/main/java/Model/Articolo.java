@@ -25,6 +25,8 @@ public class Articolo {
         this.urlImmagine = urlImmagine;
     }
 
+    // Setter per l'ID (utile quando recuperiamo dal DB)
+    public void setId(int id) { this.id = id; }
 
     public int getId() { return id; }
 

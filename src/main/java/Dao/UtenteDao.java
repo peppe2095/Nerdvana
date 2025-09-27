@@ -72,6 +72,7 @@ public class UtenteDao {
 
             if (rs.next()) {
                 utente = new Utente();
+                utente.setId(rs.getInt("id"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
                 utente.setEmail(rs.getString("email"));
@@ -111,6 +112,7 @@ public class UtenteDao {
 
             if (rs.next()) {
                 utente = new Utente();
+                utente.setId(rs.getInt("id"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
                 utente.setEmail(rs.getString("email"));
@@ -150,6 +152,7 @@ public class UtenteDao {
 
             while (rs.next()) {
                 Utente utente = new Utente();
+                utente.setId(rs.getInt("id"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
                 utente.setEmail(rs.getString("email"));
@@ -189,6 +192,7 @@ public class UtenteDao {
 
             while (rs.next()) {
                 Utente utente = new Utente();
+                utente.setId(rs.getInt("id"));
                 utente.setNome(rs.getString("nome"));
                 utente.setCognome(rs.getString("cognome"));
                 utente.setEmail(rs.getString("email"));
