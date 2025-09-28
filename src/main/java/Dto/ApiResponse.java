@@ -1,5 +1,7 @@
 package Dto;
 
+
+//DTO CHE PER IL MOMENTO STO USANDO SOLO PER MOSTRARE MESSAGGIO DI ERRORE
 public class ApiResponse<T> {
     public boolean success;
     public String message;

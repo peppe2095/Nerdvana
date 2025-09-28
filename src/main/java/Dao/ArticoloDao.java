@@ -21,30 +21,76 @@ public class ArticoloDao {
         this.connection = connection;
     }
 
+
     // Recupero paginato con filtro opzionale per tipo
-    // page parte da 1, size > 0
     public List<Articolo> getArticoliPaged(int page, int size, Tipo tipo) throws SQLException {
+
+        //size = numero di elementi che voglio mostrare all'utente
+        //se mi viene passata una size < o = a 0, allora di default sarà 8
         if (size <= 0) size = 8;
+        //page è il numero della pagina che vogliamo mostrare
+        //se è < = 0 allora di default sarà 1
         if (page <= 0) page = 1;
+        //offset = numero di elementi da saltare prima di iniziare a prendere i risultati
+        //esempio: immaginiamo che vogliamo mostrare 5 elementi all'utente per ogni pagina
+        // allora in pagina 1 -> offset = 0 perché partiamo dal primo elemento,
+        // pagina 2 -> offset = 5 (size) perché vogliamo prendere dal 5 elemento in poi
+        // pagina 3 -> offset = size * 2, perché vogliamo prendere dal 10 elemento in poi
         int offset = (page - 1) * size;
 
+        // Dichiara un PreparedStatement che verrà usato per eseguire query SQL parametrizzate 
+        // Questo oggetto aiuta a prevenire SQL injection e gestire i parametri in modo sicuro
         PreparedStatement ps = null;
+
+        // Dichiara un ResultSet che conterrà i risultati della query
+        // ResultSet è come una tabella temporanea che contiene i dati restituiti dal database
         ResultSet rs = null;
+
+        // Crea una nuova ArrayList vuota che conterrà gli oggetti Articolo 
+        // recuperati dal database. Questa lista verrà popolata e restituita dal metodo
         List<Articolo> articoli = new ArrayList<>();
+
         try {
+            // Costruisce la query SQL;
             String base = "SELECT * FROM ARTICOLO";
+
+            // Aggiunge una clausola WHERE solo se è specificato un tipo
+            // se tipo != null allora il valore della variabile sarà : "WHERE tipo = ?"
+            // altrimenti where sarà stringa vuota
+            // Il ? serve per metterci il valore del tipo SE ci viene passato
             String where = (tipo != null) ? " WHERE tipo = ?" : "";
+
+            // Aggiunge l'ordinamento per ID e la paginazione
+            // LIMIT limita il numero di risultati,
+            // OFFSET indica da dove iniziare, quindi se prendiamo dalla seconda pagina, e ogni pagina ha 5 elementi
+            // noi prendiamo dal 6 in poi.
             String orderLimit = " ORDER BY id LIMIT ? OFFSET ?";
+
+            // Concatena le parti della query
             String sql = base + where + orderLimit;
+
+            // Prepara lo statement SQL con la query costruita
             ps = connection.prepareStatement(sql);
+
+            // Indice per tenere traccia dei parametri da sostituire ai placeholder ?
             int idx = 1;
+
+            // Se c'è un tipo specificato, imposta il primo parametro con il nome del tipo
+            // L'operatore ++ post-incrementa idx dopo averlo usato
             if (tipo != null) {
                 ps.setString(idx++, tipo.name());
             }
+
+            // Imposta i parametri per LIMIT e OFFSET della paginazione
             ps.setInt(idx++, size);
             ps.setInt(idx, offset);
+        
+            // Esegue la query e ottiene i risultati
             rs = ps.executeQuery();
+        
+            // Itera sui risultati finché ci sono righe da processare
             while (rs.next()) {
+                // Per ogni riga, crea un nuovo oggetto Articolo e lo popola con i dati...
                 Articolo articolo = new Articolo();
                 articolo.setId(rs.getInt("id"));
                 articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
@@ -73,6 +119,7 @@ public class ArticoloDao {
     public int countArticoli(Tipo tipo) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        //questa query semplicemente conta tutti gli articoli per il loro tipo
         try {
             String base = "SELECT COUNT(*) FROM ARTICOLO";
             String where = (tipo != null) ? " WHERE tipo = ?" : "";
