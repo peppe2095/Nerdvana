@@ -296,12 +296,13 @@ a:hover {
 #heroCarousel img {
     max-height: 360px;
     object-fit: cover;
+    width: 100%;
 }
 
 /* Products */
 .product-img {
     height: 180px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* Responsive Design */
