@@ -25,7 +25,7 @@ public class WishListArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "INSERT INTO WISHLIST_ARTICOLO (wishlistId, articoloId) VALUES (?, ?)";
+            String sql = "INSERT INTO WISHLIST_ARTICOLO (wishlist_id, articolo_id) VALUES (?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishListArticolo.getWishlistId());
             ps.setInt(2, wishListArticolo.getArticoloId());
@@ -61,8 +61,8 @@ public class WishListArticoloDao {
 
             if (rs.next()) {
                 wishListArticolo = new WishListArticolo();
-                wishListArticolo.setWishlistId(rs.getInt("wishlistId"));
-                wishListArticolo.setArticoloId(rs.getInt("articoloId"));
+                wishListArticolo.setWishlistId(rs.getInt("wishlist_id"));
+                wishListArticolo.setArticoloId(rs.getInt("articolo_id"));
             }
         } catch (SQLException e) {
             throw new SQLException("Errore nel recupero del wishlist-articolo", e);
@@ -84,15 +84,15 @@ public class WishListArticoloDao {
         List<WishListArticolo> wishListArticoli = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE wishlistId = ?";
+            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE wishlist_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishlistId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 WishListArticolo wishListArticolo = new WishListArticolo();
-                wishListArticolo.setWishlistId(rs.getInt("wishlistId"));
-                wishListArticolo.setArticoloId(rs.getInt("articoloId"));
+                wishListArticolo.setWishlistId(rs.getInt("wishlist_id"));
+                wishListArticolo.setArticoloId(rs.getInt("articolo_id"));
                 wishListArticoli.add(wishListArticolo);
             }
         } catch (SQLException e) {
@@ -115,15 +115,15 @@ public class WishListArticoloDao {
         List<WishListArticolo> wishListArticoli = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE articoloId = ?";
+            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE articolo_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, articoloId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 WishListArticolo wishListArticolo = new WishListArticolo();
-                wishListArticolo.setWishlistId(rs.getInt("wishlistId"));
-                wishListArticolo.setArticoloId(rs.getInt("articoloId"));
+                wishListArticolo.setWishlistId(rs.getInt("wishlist_id"));
+                wishListArticolo.setArticoloId(rs.getInt("articolo_id"));
                 wishListArticoli.add(wishListArticolo);
             }
         } catch (SQLException e) {
@@ -146,7 +146,7 @@ public class WishListArticoloDao {
         WishListArticolo wishListArticolo = null;
 
         try {
-            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE wishlistId = ? AND articoloId = ?";
+            String sql = "SELECT * FROM WISHLIST_ARTICOLO WHERE wishlist_id = ? AND articolo_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishlistId);
             ps.setInt(2, articoloId);
@@ -154,8 +154,8 @@ public class WishListArticoloDao {
 
             if (rs.next()) {
                 wishListArticolo = new WishListArticolo();
-                wishListArticolo.setWishlistId(rs.getInt("wishlistId"));
-                wishListArticolo.setArticoloId(rs.getInt("articoloId"));
+                wishListArticolo.setWishlistId(rs.getInt("wishlist_id"));
+                wishListArticolo.setArticoloId(rs.getInt("articolo_id"));
             }
         } catch (SQLException e) {
             throw new SQLException("Errore nel recupero del wishlist-articolo specifico", e);
@@ -177,7 +177,7 @@ public class WishListArticoloDao {
         boolean exists = false;
 
         try {
-            String sql = "SELECT COUNT(*) FROM WISHLIST_ARTICOLO WHERE wishlistId = ? AND articoloId = ?";
+            String sql = "SELECT COUNT(*) FROM WISHLIST_ARTICOLO WHERE wishlist_id = ? AND articolo_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishlistId);
             ps.setInt(2, articoloId);
@@ -212,8 +212,8 @@ public class WishListArticoloDao {
 
             while (rs.next()) {
                 WishListArticolo wishListArticolo = new WishListArticolo();
-                wishListArticolo.setWishlistId(rs.getInt("wishlistId"));
-                wishListArticolo.setArticoloId(rs.getInt("articoloId"));
+                wishListArticolo.setWishlistId(rs.getInt("wishlist_id"));
+                wishListArticolo.setArticoloId(rs.getInt("articolo_id"));
                 wishListArticoli.add(wishListArticolo);
             }
         } catch (SQLException e) {
@@ -234,7 +234,7 @@ public class WishListArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "UPDATE WISHLIST_ARTICOLO SET wishlistId=?, articoloId=? WHERE id=?";
+            String sql = "UPDATE WISHLIST_ARTICOLO SET wishlist_id=?, articolo_id=? WHERE id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishListArticolo.getWishlistId());
             ps.setInt(2, wishListArticolo.getArticoloId());
@@ -284,7 +284,7 @@ public class WishListArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE wishlistId=? AND articoloId=?";
+            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE wishlist_id=? AND articolo_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishlistId);
             ps.setInt(2, articoloId);
@@ -309,7 +309,7 @@ public class WishListArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE wishlistId=?";
+            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE wishlist_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, wishlistId);
             ps.executeUpdate();
@@ -333,7 +333,7 @@ public class WishListArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE articoloId=?";
+            String sql = "DELETE FROM WISHLIST_ARTICOLO WHERE articolo_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, articoloId);
             ps.executeUpdate();

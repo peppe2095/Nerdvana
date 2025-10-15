@@ -176,6 +176,45 @@ public class ArticoloDao {
         }
     }
 
+    public Articolo getByNumeroSeriale(String numeroSeriale) {
+    	
+    			PreparedStatement ps = null;
+		ResultSet rs = null;
+		Articolo articolo = null;
+
+		try {
+			String sql = "SELECT * FROM ARTICOLO WHERE numeroSeriale = ?";
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, numeroSeriale);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				articolo = new Articolo();
+				articolo.setId(rs.getInt("id"));
+				articolo.setNumeroSeriale(rs.getString("numeroSeriale"));
+				articolo.setNome(rs.getString("nome"));
+				articolo.setTipo(Tipo.valueOf(rs.getString("tipo")));
+				articolo.setPrezzo(rs.getDouble("prezzo"));
+				articolo.setQuantita(rs.getInt("quantita"));
+				articolo.setDescrizione(rs.getString("descrizione"));
+				articolo.setUrl(rs.getString("url"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (ps != null) ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return articolo;
+    }
+    
+    
+    
+    
     // Metodo per recuperare un articolo tramite il suo ID
     public Articolo getArticoloById(int id) throws SQLException {
         PreparedStatement ps = null;

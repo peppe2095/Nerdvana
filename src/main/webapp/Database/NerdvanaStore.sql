@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS NerdvanaStore.ARTICOLO (
     id INT PRIMARY KEY AUTO_INCREMENT,
     numeroSeriale VARCHAR(50) UNIQUE,
     nome VARCHAR(200) NOT NULL,
-    tipo VARCHAR(100),
+    tipo ENUM('Manga', 'Fumetti', 'BoardGame', 'Videogiochi', 'Funko', 'ActionFigure') ,
     prezzo DECIMAL(10,2) NOT NULL CHECK (prezzo >= 0),
     quantita INT NOT NULL DEFAULT 0 CHECK (quantita >= 0),
     descrizione TEXT,
@@ -188,7 +188,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La quantità non può essere inferiore a 0.';
     END IF;
     IF NEW.tipo IS NOT NULL THEN
-        IF NEW.tipo NOT IN ('Manga', 'Fumetti', 'BoardGame', 'Videogiochi', 'Funko', 'Action Figure') THEN
+        IF NEW.tipo NOT IN ('Manga', 'Fumetti', 'BoardGame', 'Videogiochi', 'Funko', 'ActionFigure') THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo articolo non valido.';
         END IF;
     END IF;
@@ -356,13 +356,68 @@ VALUES
 -- ========================================
 -- ARTICOLO
 -- ========================================
+
+USE NerdvanaStore;
+
+
+
+
 INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url)
 VALUES
-('A1001', 'One Piece Volume 1', 'Manga', 7.99, 50, 'Primo volume del manga One Piece.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/onePiece1.jpg'),
-('A1002', 'Batman: Year One', 'Fumetti', 15.50, 30, 'Graphic novel di Frank Miller.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/batmanYeatOne.jpg'),
-('A1003', 'Catan', 'BoardGame', 39.99, 20, 'Gioco da tavolo strategico.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/catanBordGame.jpg'),
-('A1004', 'Funko Pop! Pikachu', 'Funko', 12.99, 40, 'Figure da collezione Pokémon.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/FunkoPop!Pikachu.jpg'),
-('A1005', 'The Last of Us Part II', 'Videogiochi', 59.90, 15, 'Videogioco per PS4.', '/Nerdvana/src/main/webapp/Database/ImageDynamic/The Last of Us Part II.jpg');
+('A1001', 'One Piece Volume 1', 'Manga', 7.99, 50, 'Primo volume del manga One Piece.', '/Database/ImageDynamic/Manga/onePiece1.jpg'),
+('A1002', 'Batman: Year One', 'Fumetti', 15.50, 30, 'Graphic novel di Frank Miller.', '/Database/ImageDynamic/Fumetti/batmanYeatOne.jpg'),
+('A1003', 'Catan', 'BoardGame', 39.99, 20, 'Gioco da tavolo strategico.', '/Database/ImageDynamic/BoardGame/catanBordGame.jpg'),
+('A1004', 'Funko Pop! Pikachu', 'Funko', 12.99, 40, 'Figure da collezione Pokémon.', '/Database/ImageDynamic/Funko/FunkoPop!Pikachu.jpg'),
+('A1005', 'The Last of Us Part II', 'Videogiochi', 59.90, 15, 'Videogioco per PS4.', '/Database/ImageDynamic/Videogiochi/The Last of Us Part II.jpg');
+
+-- MANGA (già presente: One Piece Volume 1)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1006', 'Naruto Volume 1', 'Manga', 7.50, 45, 'Primo volume del manga Naruto di Masashi Kishimoto.', '/Database/ImageDynamic/Manga/Naruto_Volume_1.jpg'),
+('A1007', 'Attack on Titan Volume 1', 'Manga', 8.99, 35, 'Primo volume di Shingeki no Kyojin di Hajime Isayama.', '/Database/ImageDynamic/Manga/attackOnTitanVol1.jpg'),
+('A1008', 'Dragon Ball Volume 1', 'Manga', 7.99, 60, 'Primo volume del leggendario manga di Akira Toriyama.', '/Database/ImageDynamic/Manga/dragonBallVol1.jpg'),
+('A1009', 'Death Note Volume 1', 'Manga', 8.50, 40, 'Primo volume del thriller psicologico di Tsugumi Ohba.', '/Database/ImageDynamic/Manga/deathNoteVol1.jpg'),
+('A1010', 'My Hero Academia Volume 1', 'Manga', 7.99, 55, 'Primo volume di Boku no Hero Academia di Kohei Horikoshi.', '/Database/ImageDynamic/Manga/myHeroAccademiaVol1.jpg');
+
+-- FUMETTI (già presente: Batman: Year One)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1011', 'Spider-Man: Amazing Fantasy #15 Reprint', 'Fumetti', 19.99, 25, 'Ristampa del primo numero di Spider-Man.', '/Database/ImageDynamic/Fumetti/Spider-ManAmazing.jpg'),
+('A1012', 'Watchmen', 'Fumetti', 24.99, 20, 'Capolavoro di Alan Moore e Dave Gibbons.', '/Database/ImageDynamic/Fumetti/Watchmen_copertina.jpg'),
+('A1013', 'The Walking Dead Volume 1', 'Fumetti', 16.50, 30, 'Primo volume della serie di Robert Kirkman.', '/Database/ImageDynamic/Fumetti/theWalkingDeadVol1.jpg'),
+('A1014', 'Superman: All-Star Superman', 'Fumetti', 18.99, 22, 'Graphic novel di Grant Morrison e Frank Quitely.', '/Database/ImageDynamic/Fumetti/allStarSuperman.jpg'),
+('A1015', 'V for Vendetta', 'Fumetti', 17.99, 28, 'Graphic novel distopica di Alan Moore.', '/Database/ImageDynamic/Fumetti/vPerVendetta.jpg');
+
+-- BOARDGAME (già presente: Catan)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1016', 'Ticket to Ride', 'BoardGame', 45.99, 18, 'Gioco strategico di costruzione ferroviaria.', '/Database/ImageDynamic/BoardGame/ticket-ride.jpg'),
+('A1017', 'Azul', 'BoardGame', 35.50, 25, 'Gioco di piazzamento tessere ispirato all azulejos portoghesi.', '/Database/ImageDynamic/BoardGame/azul.jpg'),
+('A1018', 'Splendor', 'BoardGame', 29.99, 30, 'Gioco di collezione gemme e sviluppo engine.', '/Database/ImageDynamic/BoardGame/splendor.jpg'),
+('A1019', 'King of Tokyo', 'BoardGame', 42.99, 15, 'Gioco di dadi con mostri giganti.', '/Database/ImageDynamic/BoardGame/kingOfTokyo.jpg'),
+('A1020', 'Pandemic', 'BoardGame', 38.99, 20, 'Gioco cooperativo per salvare il mondo dalle epidemie.', '/Database/ImageDynamic/BoardGame/pandemic.jpg');
+
+-- VIDEOGIOCHI (già presente: The Last of Us Part II)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1021', 'God of War (2018)', 'Videogiochi', 49.99, 12, 'Action-adventure game per PS4 con Kratos e Atreus.', '/Database/ImageDynamic/Videogiochi/godOfWar.jpg'),
+('A1022', 'The Witcher 3: Wild Hunt GOTY', 'Videogiochi', 39.99, 18, 'RPG open world con tutte le espansioni incluse.', '/Database/ImageDynamic/Videogiochi/theWitcher3.jpg'),
+('A1023', 'Super Mario Odyssey', 'Videogiochi', 54.99, 25, 'Platform adventure per Nintendo Switch.', '/Database/ImageDynamic/Videogiochi/sueprMarioOdysey.jpg'),
+('A1024', 'Cyberpunk 2077', 'Videogiochi', 29.99, 22, 'RPG futuristico ambientato a Night City.', '/Database/ImageDynamic/Videogiochi/cyberpunk.jpg'),
+('A1025', 'Ghost of Tsushima', 'Videogiochi', 44.99, 16, 'Action-adventure ambientato nel Giappone feudale.', '/Database/ImageDynamic/Videogiochi/Ghost_of_Tsushima-cover-thumb.jpg');
+
+-- FUNKO (già presente: Funko Pop! Pikachu)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1026', 'Funko Pop! Batman', 'Funko', 14.99, 35, 'Figure da collezione del Cavaliere Oscuro.', '/Database/ImageDynamic/Funko/batmanFunko.jpg'),
+('A1027', 'Funko Pop! Iron Man', 'Funko', 13.99, 42, 'Figure da collezione di Tony Stark in armatura.', '/Database/ImageDynamic/Funko/ironman.jpg'),
+('A1028', 'Funko Pop! Goku', 'Funko', 15.99, 38, 'Figure da collezione del Saiyan più famoso.', '/Database/ImageDynamic/Funko/goku.jpg'),
+('A1029', 'Funko Pop! Darth Vader', 'Funko', 16.99, 30, 'Figure da collezione del Signore dei Sith.', '/Database/ImageDynamic/Funko/darthVaderFunko.jpg'),
+('A1030', 'Funko Pop! Naruto', 'Funko', 14.50, 45, 'Figure da collezione del ninja di Konoha.', '/Database/ImageDynamic/Funko/narutoFunko.jpg');
+
+-- ACTION FIGURE (nuovo tipo, non era presente)
+INSERT INTO ARTICOLO (numeroSeriale, nome, tipo, prezzo, quantita, descrizione, url) VALUES
+('A1031', 'S.H.Figuarts Goku Ultra Instinct', 'ActionFigure', 89.99, 8, 'Action figure premium di Goku forma Ultra Istinto.', '/Database/ImageDynamic/ActionFigure/gokuActionFigure.jpg'),
+('A1032', 'Nendoroid Nezuko Kamado', 'ActionFigure', 54.99, 12, 'Figure articolata e intercambiabile di Nezuko.', '/Database/ImageDynamic/ActionFigure/nezukoActionFigure.jpg'),
+('A1033', 'Figma Link Breath of the Wild', 'ActionFigure', 79.99, 10, 'Action figure di Link con accessori intercambiabili.', '/Database/ImageDynamic/ActionFigure/zeldaActionFigure.jpg'),
+('A1034', 'Hot Toys Iron Man Mark VII', 'ActionFigure', 399.99, 3, 'Figure da collezione di lusso in scala 1/6.', '/Database/ImageDynamic/ActionFigure/ironmanActionFigure.jpg'),
+('A1035', 'Bandai Model Kit RX-78-2 Gundam', 'ActionFigure', 34.99, 15, 'Kit da montare del celebre mobile suit.', '/Database/ImageDynamic/ActionFigure/gundamactionFIgure.jpg');
+
 
 -- ========================================
 -- ORDINE

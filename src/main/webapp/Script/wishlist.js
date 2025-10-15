@@ -75,6 +75,7 @@
     });
   }
 
+  //è una vecchia funzione che ho fatto perché non mi funzionavano le URL.
   function normalizeUrl(raw){
     try{
       let u = (raw || '').trim();

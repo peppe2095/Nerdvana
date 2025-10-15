@@ -17,31 +17,31 @@
 
     <!-- Auth servlet -->
     <servlet>
-        <servlet-name>AuthServlet</servlet-name>
-        <servlet-class>Control.AuthServlet</servlet-class>
+        <servlet-name>autenticazioneServlet</servlet-name>
+        <servlet-class>Control.autenticazioneServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AuthServlet</servlet-name>
-        <url-pattern>/api/auth/*</url-pattern>
+        <servlet-name>autenticazioneServlet</servlet-name>
+        <url-pattern>/API/autenticazione/*</url-pattern>
     </servlet-mapping>
 
     <!-- Carrello servlet -->
     <servlet>
-        <servlet-name>CarrelloServlet</servlet-name>
-        <servlet-class>Control.CarrelloServlet</servlet-class>
+        <servlet-name>carrelloServlet</servlet-name>
+        <servlet-class>Control.carrelloServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>CarrelloServlet</servlet-name>
+        <servlet-name>carrelloServlet</servlet-name>
         <url-pattern>/api/cart/*</url-pattern>
     </servlet-mapping>
 
     <!-- Wishlist servlet -->
     <servlet>
-        <servlet-name>WishlistServlet</servlet-name>
-        <servlet-class>Control.WishlistServlet</servlet-class>
+        <servlet-name>wishlistServlet</servlet-name>
+        <servlet-class>Control.wishlistServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>WishlistServlet</servlet-name>
+        <servlet-name>wishlistServlet</servlet-name>
         <url-pattern>/api/wishlist/*</url-pattern>
     </servlet-mapping>
 
