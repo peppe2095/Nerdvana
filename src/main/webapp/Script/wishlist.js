@@ -79,14 +79,20 @@
   function normalizeUrl(raw){
     try{
       let u = (raw || '').trim();
-      const base = '../../';
-      if (!u) return base + 'Image/logo.png';
-      const prefix = '/Nerdvana/src/main/webapp/';
-      if (u.indexOf(prefix) === 0) u = u.substring(prefix.length);
+      // Calcola dinamicamente il context path dalla URL corrente (es: /Nerdvana)
+      const parts = (window.location.pathname || '').split('/');
+      const ctx = parts.length > 1 && parts[1] ? '/' + parts[1] : '';
+      if (!u) return ctx + '/Image/logo.png';
+      // Rimuove eventuale prefisso di percorso sorgente usato in sviluppo
+      const devPrefix = '/Nerdvana/src/main/webapp/';
+      if (u.indexOf(devPrefix) === 0) u = u.substring(devPrefix.length);
+      // Normalizza gli slash iniziali per concatenazione sicura
       if (u.startsWith('/')) u = u.slice(1);
-      return base + u;
+      return ctx + '/' + u;
     } catch(e){
-      return '../../Image/logo.png';
+      const parts = (window.location.pathname || '').split('/');
+      const ctx = parts.length > 1 && parts[1] ? '/' + parts[1] : '';
+      return ctx + '/Image/logo.png';
     }
   }
 

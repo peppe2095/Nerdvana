@@ -150,8 +150,8 @@ public class autenticazioneServlet extends HttpServlet {
             
             System.out.println("ho creato utenteDao per login");
             Utente utente = utenteDao.getUtenteByEmail(email);
-            
-            if (utente == null || !PasswordUtils.checkPassword(password, utente.getPasswordHash())) {
+            //!PasswordUtils.checkPassword(password, utente.getPasswordHash())
+            if (utente == null || !(password.equals(utente.getPasswordHash()))) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write(gson.toJson(ApiResponse.error("Email o password errate")));
@@ -166,7 +166,11 @@ public class autenticazioneServlet extends HttpServlet {
             
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(gson.toJson(ApiResponse.okMessage("Login effettuato con successo")));
+            java.util.HashMap<String, Object> data = new java.util.HashMap<>();
+            data.put("ruolo", utente.getRuolo().name());
+            data.put("nome", utente.getNome());
+            data.put("email", utente.getEmail());
+            response.getWriter().write(gson.toJson(ApiResponse.ok(data)));
             
         } catch (Exception e) {
             System.out.println("errore catch login: " + e.getMessage());

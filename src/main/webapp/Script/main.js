@@ -344,28 +344,30 @@
     }
  
  
-    // NORMALIZZAZIONE URL IMMAGINI (NON C'È PIU BISOGNO ORA CHE SISTEMIAMO NEL DB)
+    // NORMALIZZAZIONE URL IMMAGINI (aggiunge context path e gestisce spazi)
     function normalizeUrl(raw) {
         try {
-            // (raw || '') - se raw è null, usa stringa vuota
-            // .trim() - rimuove spazi all'inizio e fine
             let u = (raw || '').trim();
- 
-            // Se URL vuoto, usa immagine di default
-            if (!u) return 'Image/logo.png';
- 
-            // Rimuove prefisso del path assoluto del progetto (se presente)
-            const prefix = '/Nerdvana/src/main/webapp/';
-            if (u.indexOf(prefix) === 0) u = u.substring(prefix.length);
- 
-            // Rimuove slash iniziale se presente
+            // Context path dinamico (es: /Nerdvana)
+            const parts = (window.location.pathname || '').split('/');
+            const ctx = parts.length > 1 && parts[1] ? '/' + parts[1] : '';
+
+            if (!u) return ctx + '/Image/logo.png';
+
+            // Rimuove prefisso di sviluppo se presente
+            const devPrefix = '/Nerdvana/src/main/webapp/';
+            if (u.indexOf(devPrefix) === 0) u = u.substring(devPrefix.length);
+
+            // Normalizza leading slash
             if (u.startsWith('/')) u = u.slice(1);
- 
-            // Doppio controllo: se risultato vuoto, usa default
-            return u || 'Image/logo.png';
+
+            // Costruisce URL assoluto relativo al context path e codifica i caratteri speciali
+            const finalUrl = ctx + '/' + u;
+            return encodeURI(finalUrl);
         } catch (e) {
-            // try-catch: se qualcosa va storto, usa immagine di default
-            return 'Image/logo.png';
+            const parts = (window.location.pathname || '').split('/');
+            const ctx = parts.length > 1 && parts[1] ? '/' + parts[1] : '';
+            return ctx + '/Image/logo.png';
         }
     }
  

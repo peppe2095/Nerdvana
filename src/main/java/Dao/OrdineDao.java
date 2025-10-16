@@ -224,22 +224,24 @@ public class OrdineDao {
 
             while (rs.next()) {
                 Ordine ordine = new Ordine();
-                ordine.setUtenteId(rs.getInt("utenteId"));
-                
-                Integer cartaCreditoId = rs.getInt("cartaCreditoId");
+                ordine.setId(rs.getInt("id"));
+                ordine.setUtenteId(rs.getInt("utente_id"));
+
+                Integer cartaCreditoId = rs.getInt("carta_credito_id");
                 if (rs.wasNull()) {
                     ordine.setCartaCreditoId(null);
                 } else {
                     ordine.setCartaCreditoId(cartaCreditoId);
                 }
-                
+
                 ordine.setNumeroArticoli(rs.getInt("numeroArticoli"));
                 ordine.setImporto(rs.getDouble("importo"));
                 ordine.setDataSpedizione(rs.getDate("dataSpedizione"));
                 ordine.setDataArrivo(rs.getDate("dataArrivo"));
-                ordine.setStato(Stato.valueOf(rs.getString("stato")));
-                ordine.setDataCreazione(rs.getDate("dataCreazione"));
-                ordine.setDataAggiornamento(rs.getDate("dataAggiornamento"));
+                String statoStr = rs.getString("stato");
+                ordine.setStato(statoStr != null ? Stato.valueOf(statoStr) : null);
+                ordine.setDataCreazione(rs.getTimestamp("dataCreazione"));
+                ordine.setDataAggiornamento(rs.getTimestamp("dataAggiornamento"));
                 ordini.add(ordine);
             }
         } catch (SQLException e) {

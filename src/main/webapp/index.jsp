@@ -16,7 +16,7 @@
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
 <!-- CSS personalizzato -->
-<link rel="stylesheet" href="Stili/nerdvana-styles.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/Stili/nerdvana-styles.css">
 </head>
 <body>
 
@@ -29,15 +29,15 @@
 			<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
 				<div class="carousel-inner rounded shadow-sm">
 					<div class="carousel-item active">
-						<img src="Database/ImageDynamic/Manga/onePiece1.jpg"
+      <img src="<%=request.getContextPath()%>/Database/ImageDynamic/Manga/onePiece1.jpg"
 							class="d-block w-100" alt="Slide 1">
 					</div>
+						<div class="carousel-item">
+							<img src="<%=request.getContextPath()%>/Database/ImageDynamic/BoardGame/catanBordGame.jpg"
+								class="d-block w-100" alt="Slide 2">
+						</div>
 					<div class="carousel-item">
-						<img src="Database/ImageDynamic/BoardGame/catanBordGame.jpg"
-							class="d-block w-100" alt="Slide 2">
-					</div>
-					<div class="carousel-item">
-						<img src="Database/ImageDynamic/Funko/goku.jpg"
+						<img src="<%=request.getContextPath()%>/Database/ImageDynamic/Funko/goku.jpg"
 							class="d-block w-100" alt="Slide 3">
 					</div>
 				</div>
@@ -95,7 +95,7 @@
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 	<!-- Script per la index-->
-	<script src="Script/main.js?v=1.0.5"></script>
+	<script src="<%=request.getContextPath()%>/Script/main.js?v=1.0.5"></script>
 
 </body>
 </html>

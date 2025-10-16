@@ -66,8 +66,12 @@
                     dataType: 'json'
                 }).done(function(response) {
                     if (response.success) {
-                        alert('Login effettuato con successo!');
-                        window.location.href = '../../index.jsp';
+                        const ruolo = response.data && response.data.ruolo ? response.data.ruolo : 'cliente';
+                        if (ruolo === 'admin') {
+                            window.location.href = '../Admin/Dashboard.jsp';
+                        } else {
+                            window.location.href = '../../index.jsp';
+                        }
                     } else {
                         alert('Errore nel login: ' + response.message);
                     }
