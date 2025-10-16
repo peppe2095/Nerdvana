@@ -16,21 +16,20 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
     }
-/*
-    // Funzione per formattare la data
-    function formatDate(dateString) {
+
+    // Funzione per formattare la data di scadenza
+    function formatScadenza(dateString) {
         if (!dateString) return '-';
         try {
             const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
+            return `${month}/${year}`;
         } catch (e) {
             return dateString;
         }
     }
-*/
+
     // Funzione per mostrare notifiche toast
     function showToast(message, type = 'success') {
         const toastContainer = qs('#toast-container');
@@ -63,7 +62,7 @@
         }, 3000);
     }
 
-    // Carica i dati dell'utente
+    // Carica i dati dell'utente e le carte
     function loadUserData() {
         const loadingEl = qs('#loading-profilo');
         const contentEl = qs('#profilo-content');
@@ -75,18 +74,10 @@
         if (contentEl) contentEl.style.display = 'none';
         if (errorEl) errorEl.style.display = 'none';
 
-        // Recupera l'ID utente dalla sessione (se disponibile)
-        // In alternativa, potresti passarlo come parametro URL
-        // Per questo esempio, assumiamo che la servlet lo recuperi dalla sessione
-
         $.ajax({
             url: '../../areaRiservataServlet',
             method: 'GET',
-            dataType: 'json',
-            data: {
-                // Se hai l'ID utente, passalo qui
-                // idUtente: userId
-            }
+            dataType: 'json'
         })
         .done(function(response) {
             // Nascondi loading
@@ -98,9 +89,12 @@
                 return;
             }
 
+            // Estrai i dati dal response
+            const data = response.data || response;
+            const utente = data.utente;
+            const carte = data.carte || [];
+
             // Popola i campi con i dati utente
-            const utente = response.data || response;
-            
             if (qs('#user-nome')) qs('#user-nome').textContent = escapeHtml(utente.nome);
             if (qs('#user-cognome')) qs('#user-cognome').textContent = escapeHtml(utente.cognome);
             if (qs('#user-email')) qs('#user-email').textContent = escapeHtml(utente.email);
@@ -111,6 +105,9 @@
             if (qs('#user-civico')) qs('#user-civico').textContent = escapeHtml(utente.numeroCivico);
             if (qs('#user-citta')) qs('#user-citta').textContent = escapeHtml(utente.cittaResidenza);
             if (qs('#user-cap')) qs('#user-cap').textContent = escapeHtml(utente.cap);
+
+            // Popola le carte di credito
+            displayCarte(carte);
 
             // Mostra il contenuto
             if (contentEl) contentEl.style.display = 'block';
@@ -137,6 +134,45 @@
             const errorMessage = jqXHR.responseJSON?.message || 'Errore nel caricamento dei dati';
             showError(errorMessage);
         });
+    }
+
+    // Visualizza le carte di credito
+    function displayCarte(carte) {
+        const carteContainer = qs('#carte-container');
+        if (!carteContainer) return;
+
+        if (!carte || carte.length === 0) {
+            carteContainer.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Non hai ancora aggiunto metodi di pagamento
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="row g-3">';
+        carte.forEach(carta => {
+            html += `
+                <div class="col-md-6">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-credit-card"></i> ${escapeHtml(carta.nomeTitolare)}
+                            </h6>
+                            <p class="card-text mb-2">
+                                <strong>Numero:</strong> ${escapeHtml(carta.numeroCarta)}
+                            </p>
+                            <p class="card-text mb-0">
+                                <strong>Scadenza:</strong> ${formatScadenza(carta.scadenza)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        carteContainer.innerHTML = html;
     }
 
     // Mostra messaggio di errore
@@ -218,6 +254,78 @@
         }
     }
 
+    // Gestione aggiunta carta di credito
+    function initAddCarta() {
+        const form = qs('#form-add-carta');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nomeTitolare = qs('#nomeTitolare').value;
+                const numeroCarta = qs('#numeroCarta').value;
+                const cvv = qs('#cvv').value;
+                const scadenza = qs('#scadenza').value;
+
+                // Validazione client-side
+                const numCartaPulito = numeroCarta.replace(/\s+/g, '');
+                if (!/^\d{16}$/.test(numCartaPulito)) {
+                    showToast('Il numero carta deve contenere 16 cifre', 'warning');
+                    return;
+                }
+
+                if (!/^\d{3}$/.test(cvv)) {
+                    showToast('Il CVV deve contenere 3 cifre', 'warning');
+                    return;
+                }
+
+                // Invia richiesta
+                $.ajax({
+                    url: '../../areaRiservataServlet',
+                    method: 'POST',
+                    data: {
+                        nomeTitolare: nomeTitolare,
+                        numeroCarta: numCartaPulito,
+                        cvv: cvv,
+                        scadenza: scadenza
+                    },
+                    dataType: 'json'
+                })
+                .done(function(response) {
+                    if (response && response.success !== false) {
+                        showToast('Carta di credito aggiunta con successo', 'success');
+                        form.reset();
+                        
+                        // Chiudi il modal
+                        const modalEl = qs('#modalAddCarta');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                        
+                        // Aggiorna la visualizzazione delle carte
+                        const data = response.data || response;
+                        const carte = data.carte || [];
+                        displayCarte(carte);
+                    } else {
+                        showToast(response.message || 'Errore nell\'aggiunta della carta', 'danger');
+                    }
+                })
+                .fail(function(jqXHR) {
+                    const errorMessage = jqXHR.responseJSON?.message || 'Errore nell\'aggiunta della carta';
+                    showToast(errorMessage, 'danger');
+                });
+            });
+        }
+
+        // Formattazione automatica numero carta
+        const numeroCartaInput = qs('#numeroCarta');
+        if (numeroCartaInput) {
+            numeroCartaInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                e.target.value = formattedValue;
+            });
+        }
+    }
+
     // Inizializzazione quando il DOM è caricato
     document.addEventListener('DOMContentLoaded', function() {
         // Verifica se siamo nella pagina Area Riservata
@@ -231,6 +339,9 @@
 
         // Inizializza cambio password
         initPasswordChange();
+
+        // Inizializza aggiunta carta
+        initAddCarta();
 
         // Carica i dati dell'utente
         loadUserData();

@@ -26,7 +26,7 @@ public class CartaDiCreditoDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "INSERT INTO CARTA_DI_CREDITO (utenteId, nomeTitolare, numeroCarta, cvv, scadenza) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO CARTA_DI_CREDITO (utente_id, nomeTitolare, numeroCarta, cvv, scadenza) VALUES (?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, carta.getUtenteId());
             ps.setString(2, carta.getNomeTitolare());
@@ -65,7 +65,7 @@ public class CartaDiCreditoDao {
 
             if (rs.next()) {
                 carta = new CartaDiCredito();
-                carta.setUtenteId(rs.getInt("utenteId"));
+                carta.setUtenteId(rs.getInt("utente_id"));
                 carta.setNomeTitolare(rs.getString("nomeTitolare"));
                 carta.setNumeroCarta(rs.getString("numeroCarta"));
                 carta.setCvv(rs.getString("cvv"));
@@ -91,14 +91,14 @@ public class CartaDiCreditoDao {
         List<CartaDiCredito> carte = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM CARTA_DI_CREDITO WHERE utenteId = ?";
+            String sql = "SELECT * FROM CARTA_DI_CREDITO WHERE utente_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, utenteId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 CartaDiCredito carta = new CartaDiCredito();
-                carta.setUtenteId(rs.getInt("utenteId"));
+                carta.setUtenteId(rs.getInt("utente_id"));
                 carta.setNomeTitolare(rs.getString("nomeTitolare"));
                 carta.setNumeroCarta(rs.getString("numeroCarta"));
                 carta.setCvv(rs.getString("cvv"));
@@ -131,7 +131,7 @@ public class CartaDiCreditoDao {
 
             while (rs.next()) {
                 CartaDiCredito carta = new CartaDiCredito();
-                carta.setUtenteId(rs.getInt("utenteId"));
+                carta.setUtenteId(rs.getInt("utente_id"));
                 carta.setNomeTitolare(rs.getString("nomeTitolare"));
                 carta.setNumeroCarta(rs.getString("numeroCarta"));
                 carta.setCvv(rs.getString("cvv"));
@@ -156,7 +156,7 @@ public class CartaDiCreditoDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "UPDATE CARTA_DI_CREDITO SET utenteId=?, nomeTitolare=?, numeroCarta=?, cvv=?, scadenza=? WHERE id=?";
+            String sql = "UPDATE CARTA_DI_CREDITO SET utente_id=?, nomeTitolare=?, numeroCarta=?, cvv=?, scadenza=? WHERE id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, carta.getUtenteId());
             ps.setString(2, carta.getNomeTitolare());
@@ -209,7 +209,7 @@ public class CartaDiCreditoDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM CARTA_DI_CREDITO WHERE utenteId=?";
+            String sql = "DELETE FROM CARTA_DI_CREDITO WHERE utente_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, utenteId);
             ps.executeUpdate();
