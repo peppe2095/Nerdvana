@@ -8,6 +8,8 @@
     <title>Area Riservata - Nerdvana</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- CSS personalizzato -->
     <link rel="stylesheet" href="../../Stili/nerdvana-styles.css">
 </head>
@@ -25,6 +27,9 @@
                     <nav class="nav flex-column">
                         <a class="nav-link active" href="#" data-section="profilo">
                             <i class="bi bi-person"></i> Il mio profilo
+                        </a>
+                        <a class="nav-link" href="#" data-section="pagamenti">
+                            <i class="bi bi-credit-card"></i> I miei metodi di pagamento
                         </a>
                         <a class="nav-link" href="#" data-section="ordini">
                             <i class="bi bi-box"></i> I miei ordini
@@ -118,6 +123,28 @@
                 </div>
             </div>
 
+            <!-- Sezione Metodi di Pagamento -->
+            <div id="section-pagamenti" class="content-section" style="display: none;">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">I miei metodi di pagamento</h4>
+                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddCarta">
+                            <i class="bi bi-plus-circle"></i> Aggiungi carta
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="carte-container">
+                            <!-- Le carte verranno caricate dinamicamente -->
+                            <div class="text-center py-3">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Caricamento...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Sezione Ordini -->
             <div id="section-ordini" class="content-section" style="display: none;">
                 <div class="card shadow-sm">
@@ -163,6 +190,56 @@
     </div>
 </div>
 
+<!-- Modal Aggiungi Carta -->
+<div class="modal fade" id="modalAddCarta" tabindex="-1" aria-labelledby="modalAddCartaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAddCartaLabel">
+                    <i class="bi bi-credit-card"></i> Aggiungi carta di credito
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form-add-carta">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nomeTitolare" class="form-label">Nome titolare *</label>
+                        <input type="text" class="form-control" id="nomeTitolare" 
+                               placeholder="Es: Mario Rossi" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numeroCarta" class="form-label">Numero carta *</label>
+                        <input type="text" class="form-control" id="numeroCarta" 
+                               placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        <small class="text-muted">Inserisci 16 cifre</small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="scadenza" class="form-label">Data di scadenza *</label>
+                            <input type="date" class="form-control" id="scadenza" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cvv" class="form-label">CVV *</label>
+                            <input type="text" class="form-control" id="cvv" 
+                                   placeholder="123" maxlength="3" required>
+                            <small class="text-muted">3 cifre sul retro</small>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-shield-check"></i> I tuoi dati sono protetti e criptati
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Aggiungi carta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <%@ include file="../Fragments/Footer.jsp" %>
 
 <!-- jQuery -->
@@ -170,7 +247,7 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Main JS -->
-<script src="../../Script/main.js"></script>
+<!--  <script src="../../Script/main.js"></script>-->
 <!-- Area Riservata JS -->
 <script src="../../Script/areaRiservata.js"></script>
 
