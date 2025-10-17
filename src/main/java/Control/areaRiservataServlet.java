@@ -53,7 +53,6 @@ public class areaRiservataServlet extends HttpServlet {
             Utente utenteSessione = (Utente) session.getAttribute("utente");
             int idUtente = utenteSessione.getId();
             
-            System.out.println("ID Utente in sessione: " + idUtente);
 
             // Verifica che l'utente stia accedendo ai propri dati (a meno che non sia admin)
             if (idUtente != utenteSessione.getId() && 
@@ -192,7 +191,6 @@ public class areaRiservataServlet extends HttpServlet {
                 ));
                 return;
             }
-            System.out.println("Scadenza carta: " + scadenza);
             // Crea l'oggetto CartaDiCredito
             CartaDiCredito nuovaCarta = new CartaDiCredito(
                 idUtente,
@@ -201,16 +199,11 @@ public class areaRiservataServlet extends HttpServlet {
                 cvv,
                 scadenza
             );
-            System.out.println("Nuova carta creata per utente ID: " + idUtente);
-            
-            
+
             // Salva nel database
             Connection connection = GestoreConnessioneDatabase.getConnection();
             CartaDiCreditoDao cartaDao = new CartaDiCreditoDao(connection);
             cartaDao.addCartaDiCredito(nuovaCarta);
-            
-            
-            System.out.println("DAO creato");
             
             // Recupera i dati aggiornati
             UtenteDao utenteDao = new UtenteDao(connection);

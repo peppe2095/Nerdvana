@@ -25,7 +25,7 @@ public class FatturaDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "INSERT INTO FATTURA (ordineId, urlFattura) VALUES (?, ?)";
+            String sql = "INSERT INTO FATTURA (ordine_id, urlFattura) VALUES (?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fattura.getOrdineId());
             ps.setString(2, fattura.getUrlFattura());
@@ -61,7 +61,7 @@ public class FatturaDao {
 
             if (rs.next()) {
                 fattura = new Fattura();
-                fattura.setOrdineId(rs.getInt("ordineId"));
+                fattura.setOrdineId(rs.getInt("ordine_id"));
                 fattura.setUrlFattura(rs.getString("urlFattura"));
             }
         } catch (SQLException e) {
@@ -84,14 +84,14 @@ public class FatturaDao {
         Fattura fattura = null;
 
         try {
-            String sql = "SELECT * FROM FATTURA WHERE ordineId = ?";
+            String sql = "SELECT * FROM FATTURA WHERE ordine_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineId);
             rs = ps.executeQuery();
 
             if (rs.next()) {
                 fattura = new Fattura();
-                fattura.setOrdineId(rs.getInt("ordineId"));
+                fattura.setOrdineId(rs.getInt("ordine_id"));
                 fattura.setUrlFattura(rs.getString("urlFattura"));
             }
         } catch (SQLException e) {
@@ -120,7 +120,7 @@ public class FatturaDao {
 
             while (rs.next()) {
                 Fattura fattura = new Fattura();
-                fattura.setOrdineId(rs.getInt("ordineId"));
+                fattura.setOrdineId(rs.getInt("ordine_id"));
                 fattura.setUrlFattura(rs.getString("urlFattura"));
                 fatture.add(fattura);
             }
@@ -142,7 +142,7 @@ public class FatturaDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "UPDATE FATTURA SET ordineId=?, urlFattura=? WHERE id=?";
+            String sql = "UPDATE FATTURA SET ordine_id=?, urlFattura=? WHERE id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fattura.getOrdineId());
             ps.setString(2, fattura.getUrlFattura());
@@ -192,10 +192,10 @@ public class FatturaDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM FATTURA WHERE ordineId=?";
+            String sql = "DELETE FROM FATTURA WHERE ordine_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineId);
-            ps.executeUpdate();
+            ps.executeUpdate() ;
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {

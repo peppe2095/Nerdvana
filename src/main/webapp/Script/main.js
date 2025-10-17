@@ -83,9 +83,13 @@
         const logoutLink = qs('#logoutLink');
         if (logoutLink) logoutLink.addEventListener('click', (e) => {
             e.preventDefault(); // Impedisce navigazione del link
- 
+
+            // Costruisce dinamicamente il context path (es: /Nerdvana) per funzionare con qualsiasi nome di deployment
+            const parts = (window.location.pathname || '').split('/');
+            const ctx = parts.length > 1 && parts[1] ? '/' + parts[1] : '';
+
             $.ajax({
-                url: 'api/auth/logout',
+                url: ctx + '/API/autenticazione/logout',
                 method: 'POST'
             })
                 // .done() - cosa fare se la richiesta ha successo
@@ -93,8 +97,9 @@
                     location.reload(); // Ricarica la pagina per aggiornare l'interfaccia
                 })
                 // .fail() - cosa fare se la richiesta fallisce
-                .fail(function() {
-                    alert('Errore durante il logout'); // Mostra messaggio di errore
+                .fail(function(jq) {
+                    const msg = (jq && jq.responseJSON && jq.responseJSON.message) || 'Errore durante il logout';
+                    alert(msg); // Mostra messaggio di errore
                 });
         });
  

@@ -45,6 +45,26 @@
         <url-pattern>/api/wishlist/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Ordine servlet -->
+    <servlet>
+        <servlet-name>ordineServlet</servlet-name>
+        <servlet-class>Control.ordineServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ordineServlet</servlet-name>
+        <url-pattern>/api/order/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Fattura PDF servlet -->
+    <servlet>
+        <servlet-name>fatturaPdfServlet</servlet-name>
+        <servlet-class>Control.fatturaPdfServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fatturaPdfServlet</servlet-name>
+        <url-pattern>/api/invoice/pdf</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>Control.AdminServlet</servlet-class>

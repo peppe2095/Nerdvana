@@ -25,13 +25,13 @@
                 <div class="card-body">
                     <h5 class="card-title mb-3">Menu</h5>
                     <nav class="nav flex-column">
-                        <a class="nav-link active" href="#" data-section="profilo">
+                        <a class="nav-link" href="#" data-section="profilo">
                             <i class="bi bi-person"></i> Il mio profilo
                         </a>
                         <a class="nav-link" href="#" data-section="pagamenti">
                             <i class="bi bi-credit-card"></i> I miei metodi di pagamento
                         </a>
-                        <a class="nav-link" href="#" data-section="ordini">
+                        <a class="nav-link active" href="#" data-section="ordini">
                             <i class="bi bi-box"></i> I miei ordini
                         </a>
                         <a class="nav-link" href="#" data-section="impostazioni">
@@ -45,7 +45,7 @@
         <!-- Contenuto principale -->
         <div class="col-md-9">
             <!-- Sezione Profilo -->
-            <div id="section-profilo" class="content-section">
+            <div id="section-profilo" class="content-section" style="display: none;">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">I miei dati</h4>
@@ -146,16 +146,29 @@
             </div>
 
             <!-- Sezione Ordini -->
-            <div id="section-ordini" class="content-section" style="display: none;">
+            <div id="section-ordini" class="content-section" style="display: block;">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">I miei ordini</h4>
+                        <button class="btn btn-light btn-sm" id="btn-refresh-ordini"><i class="bi bi-arrow-clockwise"></i> Aggiorna</button>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> Sezione in fase di sviluppo
+                        <div id="ordini-error" class="alert alert-danger d-none"></div>
+                        <div id="ordini-empty" class="alert alert-warning d-none">Non hai ancora effettuato ordini.</div>
+                        <div class="table-responsive">
+                            <table class="table align-middle" id="ordini-table" style="display:none">
+                                <thead>
+                                <tr>
+                                    <th># Ordine</th>
+                                    <th>Data</th>
+                                    <th class="text-end">Totale</th>
+                                    <th>Stato</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="ordini-tbody"></tbody>
+                            </table>
                         </div>
-                        <p class="text-muted">Qui visualizzerai lo storico dei tuoi ordini.</p>
                     </div>
                 </div>
             </div>

@@ -147,6 +147,59 @@ public class AdminServlet extends HttpServlet {
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().write(gson.toJson(ApiResponse.okMessage("Admin registrato")));
+            } else if ("/articoli/update".equals(path)) {
+                String idStr = req.getParameter("id");
+                String numeroSeriale = req.getParameter("numeroSeriale");
+                String nome = req.getParameter("nome");
+                String tipoStr = req.getParameter("tipo");
+                String prezzoStr = req.getParameter("prezzo");
+                String quantitaStr = req.getParameter("quantita");
+                String descrizione = req.getParameter("descrizione");
+                String url = req.getParameter("url");
+
+                if (idStr == null || idStr.isEmpty()) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write(gson.toJson(ApiResponse.error("ID articolo mancante")));
+                    return;
+                }
+
+                int id = Integer.parseInt(idStr);
+
+                Connection connection = GestoreConnessioneDatabase.getConnection();
+                ArticoloDao articoloDao = new ArticoloDao(connection);
+
+                // Recupera articolo esistente per preservare campi non passati
+                Model.Articolo articolo = articoloDao.getArticoloById(id);
+                if (articolo == null) {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().write(gson.toJson(ApiResponse.error("Articolo non trovato")));
+                    return;
+                }
+
+                if (numeroSeriale != null) articolo.setNumeroSeriale(numeroSeriale);
+                if (nome != null) articolo.setNome(nome);
+                if (tipoStr != null && !tipoStr.isEmpty()) articolo.setTipo(Model.Enum.Tipo.valueOf(tipoStr));
+                if (prezzoStr != null && !prezzoStr.isEmpty()) articolo.setPrezzo(Double.parseDouble(prezzoStr));
+                if (quantitaStr != null && !quantitaStr.isEmpty()) articolo.setQuantita(Integer.parseInt(quantitaStr));
+                if (descrizione != null) articolo.setDescrizione(descrizione);
+                if (url != null) articolo.setUrl(url);
+
+                articoloDao.updateArticolo(articolo);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write(gson.toJson(ApiResponse.okMessage("Articolo aggiornato")));
+            } else if ("/articoli/delete".equals(path)) {
+                String idStr = req.getParameter("id");
+                if (idStr == null || idStr.isEmpty()) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write(gson.toJson(ApiResponse.error("ID articolo mancante")));
+                    return;
+                }
+                int id = Integer.parseInt(idStr);
+                Connection connection = GestoreConnessioneDatabase.getConnection();
+                ArticoloDao articoloDao = new ArticoloDao(connection);
+                articoloDao.deleteArticolo(id);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write(gson.toJson(ApiResponse.okMessage("Articolo eliminato")));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write(gson.toJson(ApiResponse.error("Endpoint non trovato")));
