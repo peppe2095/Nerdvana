@@ -27,11 +27,11 @@ public class OrdineDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "INSERT INTO ORDINE (utenteId, cartaCreditoId, numeroArticoli, importo, dataSpedizione, dataArrivo, stato, dataCreazione, dataAggiornamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO ORDINE (utente_id, carta_credito_id, numeroArticoli, importo, dataSpedizione, dataArrivo, stato, dataCreazione, dataAggiornamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, ordine.getUtenteId());
             
-            // Gestione del cartaCreditoId che può essere null
+            // Gestione del carta_credito_id che può essere null
             if (ordine.getCartaCreditoId() != null) {
                 ps.setInt(2, ordine.getCartaCreditoId());
             } else {
@@ -55,10 +55,16 @@ public class OrdineDao {
             }
             
             ps.setString(7, ordine.getStato().name());
-            ps.setDate(8, new java.sql.Date(ordine.getDataCreazione().getTime()));
-            ps.setDate(9, new java.sql.Date(ordine.getDataAggiornamento().getTime()));
+            ps.setTimestamp(8, new java.sql.Timestamp(ordine.getDataCreazione().getTime()));
+            ps.setTimestamp(9, new java.sql.Timestamp(ordine.getDataAggiornamento().getTime()));
             
             ps.executeUpdate();
+            // Recupera l'ID generato e impostalo sull'oggetto
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    ordine.setId(keys.getInt(1));
+                }
+            }
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
@@ -84,16 +90,15 @@ public class OrdineDao {
         try {
             String sql = "SELECT * FROM ORDINE WHERE id = ?";
             ps = connection.prepareStatement(sql);
-            //setto il primo parametro della query (il ?) con il valore di id
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
                 ordine = new Ordine();
-                ordine.setUtenteId(rs.getInt("utenteId"));
+                ordine.setId(rs.getInt("id"));
+                ordine.setUtenteId(rs.getInt("utente_id"));
                 
-                // Gestione del cartaCreditoId che può essere null
-                Integer cartaCreditoId = rs.getInt("cartaCreditoId");
+                Integer cartaCreditoId = rs.getInt("carta_credito_id");
                 if (rs.wasNull()) {
                     ordine.setCartaCreditoId(null);
                 } else {
@@ -104,9 +109,10 @@ public class OrdineDao {
                 ordine.setImporto(rs.getDouble("importo"));
                 ordine.setDataSpedizione(rs.getDate("dataSpedizione"));
                 ordine.setDataArrivo(rs.getDate("dataArrivo"));
-                ordine.setStato(Stato.valueOf(rs.getString("stato")));
-                ordine.setDataCreazione(rs.getDate("dataCreazione"));
-                ordine.setDataAggiornamento(rs.getDate("dataAggiornamento"));
+                String statoStr = rs.getString("stato");
+                ordine.setStato(statoStr != null ? Stato.valueOf(statoStr) : null);
+                ordine.setDataCreazione(rs.getTimestamp("dataCreazione"));
+                ordine.setDataAggiornamento(rs.getTimestamp("dataAggiornamento"));
             }
         } catch (SQLException e) {
             throw new SQLException("Errore nel recupero dell'ordine", e);
@@ -128,16 +134,17 @@ public class OrdineDao {
         List<Ordine> ordini = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM ORDINE WHERE utenteId = ? ORDER BY dataCreazione DESC";
+            String sql = "SELECT * FROM ORDINE WHERE utente_id = ? ORDER BY dataCreazione DESC";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, utenteId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 Ordine ordine = new Ordine();
-                ordine.setUtenteId(rs.getInt("utenteId"));
+                ordine.setId(rs.getInt("id"));
+                ordine.setUtenteId(rs.getInt("utente_id"));
                 
-                Integer cartaCreditoId = rs.getInt("cartaCreditoId");
+                Integer cartaCreditoId = rs.getInt("carta_credito_id");
                 if (rs.wasNull()) {
                     ordine.setCartaCreditoId(null);
                 } else {
@@ -148,9 +155,10 @@ public class OrdineDao {
                 ordine.setImporto(rs.getDouble("importo"));
                 ordine.setDataSpedizione(rs.getDate("dataSpedizione"));
                 ordine.setDataArrivo(rs.getDate("dataArrivo"));
-                ordine.setStato(Stato.valueOf(rs.getString("stato")));
-                ordine.setDataCreazione(rs.getDate("dataCreazione"));
-                ordine.setDataAggiornamento(rs.getDate("dataAggiornamento"));
+                String statoStr = rs.getString("stato");
+                ordine.setStato(statoStr != null ? Stato.valueOf(statoStr) : null);
+                ordine.setDataCreazione(rs.getTimestamp("dataCreazione"));
+                ordine.setDataAggiornamento(rs.getTimestamp("dataAggiornamento"));
                 ordini.add(ordine);
             }
         } catch (SQLException e) {
@@ -180,9 +188,10 @@ public class OrdineDao {
 
             while (rs.next()) {
                 Ordine ordine = new Ordine();
-                ordine.setUtenteId(rs.getInt("utenteId"));
+                ordine.setId(rs.getInt("id"));
+                ordine.setUtenteId(rs.getInt("utente_id"));
                 
-                Integer cartaCreditoId = rs.getInt("cartaCreditoId");
+                Integer cartaCreditoId = rs.getInt("carta_credito_id");
                 if (rs.wasNull()) {
                     ordine.setCartaCreditoId(null);
                 } else {
@@ -193,9 +202,10 @@ public class OrdineDao {
                 ordine.setImporto(rs.getDouble("importo"));
                 ordine.setDataSpedizione(rs.getDate("dataSpedizione"));
                 ordine.setDataArrivo(rs.getDate("dataArrivo"));
-                ordine.setStato(Stato.valueOf(rs.getString("stato")));
-                ordine.setDataCreazione(rs.getDate("dataCreazione"));
-                ordine.setDataAggiornamento(rs.getDate("dataAggiornamento"));
+                String statoStr = rs.getString("stato");
+                ordine.setStato(statoStr != null ? Stato.valueOf(statoStr) : null);
+                ordine.setDataCreazione(rs.getTimestamp("dataCreazione"));
+                ordine.setDataAggiornamento(rs.getTimestamp("dataAggiornamento"));
                 ordini.add(ordine);
             }
         } catch (SQLException e) {

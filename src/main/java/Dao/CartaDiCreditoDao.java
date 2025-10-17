@@ -65,6 +65,7 @@ public class CartaDiCreditoDao {
 
             if (rs.next()) {
                 carta = new CartaDiCredito();
+                carta.setId(rs.getInt("id"));
                 carta.setUtenteId(rs.getInt("utente_id"));
                 carta.setNomeTitolare(rs.getString("nomeTitolare"));
                 carta.setNumeroCarta(rs.getString("numeroCarta"));
@@ -98,6 +99,7 @@ public class CartaDiCreditoDao {
 
             while (rs.next()) {
                 CartaDiCredito carta = new CartaDiCredito();
+                carta.setId(rs.getInt("id"));
                 carta.setUtenteId(rs.getInt("utente_id"));
                 carta.setNomeTitolare(rs.getString("nomeTitolare"));
                 carta.setNumeroCarta(rs.getString("numeroCarta"));

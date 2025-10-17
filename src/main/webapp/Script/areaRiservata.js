@@ -208,6 +208,9 @@
                 if (targetSection) {
                     targetSection.style.display = 'block';
                 }
+                if (sectionName === 'ordini') {
+                    loadUserOrders();
+                }
             });
         });
     }
@@ -326,6 +329,62 @@
         }
     }
 
+    // Carica ordini utente (Sezione Ordini)
+    function loadUserOrders() {
+        const err = qs('#ordini-error');
+        const empty = qs('#ordini-empty');
+        const table = qs('#ordini-table');
+        const tbody = qs('#ordini-tbody');
+        if (err) { err.classList.add('d-none'); err.textContent=''; }
+        if (empty) empty.classList.add('d-none');
+        if (table) table.style.display = 'none';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Caricamento...</td></tr>';
+        $.ajax({ url: '../../api/order/user-list', method: 'GET', dataType: 'json' })
+          .done(function(res){
+            if (!res || res.success === false) {
+                if (err) { err.textContent = (res && res.message) || 'Errore nel recupero ordini'; err.classList.remove('d-none'); }
+                return;
+            }
+            const list = res.data || [];
+            renderUserOrders(list);
+          }).fail(function(jq){ if (err) { err.textContent = (jq.responseJSON && jq.responseJSON.message) || 'Errore di rete'; err.classList.remove('d-none'); } });
+    }
+
+    function renderUserOrders(list) {
+        const empty = qs('#ordini-empty');
+        const table = qs('#ordini-table');
+        const tbody = qs('#ordini-tbody');
+        if (!tbody) return;
+        if (!list || list.length === 0) {
+            if (tbody) tbody.innerHTML = '';
+            if (table) table.style.display = 'none';
+            if (empty) empty.classList.remove('d-none');
+            return;
+        }
+        let rows = '';
+        list.forEach(function(o){
+            const id = o.id;
+            const data = formatDate(o.dataCreazione);
+            const tot = Number(o.importo || 0).toFixed(2);
+            const stato = o.stato || 'in_attesa';
+            const fattUrl = o.fatturaUrl || '#';
+            rows += '<tr>'+
+                    '<td>#'+escapeHtml(id)+'</td>'+
+                    '<td>'+escapeHtml(data)+'</td>'+
+                    '<td class="text-end">€ '+tot+'</td>'+
+                    '<td>'+escapeHtml(stato)+'</td>'+
+                    '<td class="text-end">'+
+                      '<a class="btn btn-sm btn-outline-primary me-2" href="'+escapeHtml('../../Jsp/order-summary.jsp?orderId='+id)+'">Dettagli</a>'+
+                      (fattUrl && fattUrl !== '#' ? '<a class="btn btn-sm btn-primary" target="_blank" href="'+escapeHtml(fattUrl)+'">Fattura PDF</a>' : '')+
+                    '</td>'+
+                    '</tr>';
+        });
+        tbody.innerHTML = rows;
+        if (table) table.style.display = '';
+    }
+
+    function formatDate(iso) { try { const d = new Date(iso); return d.toLocaleDateString('it-IT'); } catch(e) { return iso || ''; } }
+
     // Inizializzazione quando il DOM è caricato
     document.addEventListener('DOMContentLoaded', function() {
         // Verifica se siamo nella pagina Area Riservata
@@ -345,6 +404,13 @@
 
         // Carica i dati dell'utente
         loadUserData();
+        // Carica subito anche gli ordini, così sono visibili nella tab "I miei ordini"
+        loadUserOrders();
+
+        const btnRefresh = qs('#btn-refresh-ordini');
+        if (btnRefresh) {
+            btnRefresh.addEventListener('click', function(){ loadUserOrders(); });
+        }
     });
 
 })();

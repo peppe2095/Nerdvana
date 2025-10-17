@@ -68,7 +68,8 @@
                     if (response.success) {
                         const ruolo = response.data && response.data.ruolo ? response.data.ruolo : 'cliente';
                         if (ruolo === 'admin') {
-                            window.location.href = '../Admin/Dashboard.jsp';
+                            // L'admin viene portato alla sua Area Riservata (tab Prodotti attiva)
+                            window.location.href = '../../Jsp/Admin/AreaRiservata.jsp';
                         } else {
                             window.location.href = '../../index.jsp';
                         }

@@ -1,394 +1,160 @@
-/* Nerdvana Global Styles */
-
-/* PER IL CSS MI SONO UN PO' AIUTATO CON CLAUDE*/
-
 :root {
-    --primary-color: #ff6b35;
-    --secondary-color: #f7931e;
-    --dark-bg: #2c3e50;
-    --light-bg: #ecf0f1;
-    --success-color: #27ae60;
-    --warning-color: #f39c12;
-    --error-color: #e74c3c;
-    --text-dark: #2c3e50;
-    --text-muted: #7f8c8d;
-    --border-color: #dee2e6;
-    --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
-    --shadow-medium: 0 5px 20px rgba(0,0,0,0.15);
-    --shadow-heavy: 0 10px 30px rgba(0,0,0,0.2);
-    --transition-fast: all 0.2s ease;
-    --transition-medium: all 0.3s ease;
-    --transition-slow: all 0.5s ease;
-    --border-radius: 8px;
-    --border-radius-large: 15px;
-    --border-radius-pill: 50px;
+  --primary-color: #ff6600;
+  --secondary-color: #ffcc00;
+  --light-bg: #f8f9fa;
+  --dark-text: #333;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-heavy: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* ======== Layout generale ======== */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--text-dark);
-    background-color: #ffffff;
-    overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+  margin: 0;
+  padding: 0;
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
+/* ======== Header / Navbar ======== */
+.navbar {
+  background: linear-gradient(135deg, #FFD700, #FFC700) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1rem; }
-
-p {
-    margin-bottom: 1rem;
-    line-height: 1.6;
+.navbar .nav-link {
+  color: #000 !important;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: var(--transition-medium);
+.navbar .nav-link:hover {
+  color: var(--primary-color) !important;
+  transform: translateY(-2px);
 }
 
-a:hover {
-    color: var(--secondary-color);
+.navbar-brand span {
+  color: #000;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
 }
 
-/* Utility Classes */
-.text-primary { color: var(--primary-color) !important; }
-.text-secondary { color: var(--secondary-color) !important; }
-.text-muted { color: var(--text-muted) !important; }
-.bg-primary { background-color: var(--primary-color) !important; }
-.bg-secondary { background-color: var(--secondary-color) !important; }
-.bg-dark { background-color: var(--dark-bg) !important; }
-.bg-light { background-color: var(--light-bg) !important; }
-
-.shadow-sm { box-shadow: var(--shadow-light) !important; }
-.shadow { box-shadow: var(--shadow-medium) !important; }
-.shadow-lg { box-shadow: var(--shadow-heavy) !important; }
-
-.rounded { border-radius: var(--border-radius) !important; }
-.rounded-lg { border-radius: var(--border-radius-large) !important; }
-.rounded-pill { border-radius: var(--border-radius-pill) !important; }
-
-.transition-fast { transition: var(--transition-fast) !important; }
-.transition-medium { transition: var(--transition-medium) !important; }
-.transition-slow { transition: var(--transition-slow) !important; }
-
-/* Buttons */
-.btn-nerdvana {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    border: none;
-    color: white;
-    padding: 12px 24px;
-    border-radius: var(--border-radius-pill);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: var(--transition-medium);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
+/* ======== Hero Carousel (slider fisso) ======== */
+#heroCarousel {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.btn-nerdvana:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-    color: white;
+/* Altezza fissa per tutte le immagini */
+#heroCarousel .carousel-item {
+  height: 450px; /* puoi regolare: 400–500px */
 }
 
-.btn-nerdvana:active {
-    transform: translateY(0);
-}
-
-.btn-outline-nerdvana {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    padding: 10px 22px;
-    border-radius: var(--border-radius-pill);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: var(--transition-medium);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-}
-
-.btn-outline-nerdvana:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-}
-
-/* Cards */
-.card-nerdvana {
-    background: white;
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--border-color);
-    transition: var(--transition-medium);
-    overflow: hidden;
-}
-
-.card-nerdvana:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-medium);
-}
-
-.card-header-nerdvana {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    padding: 20px;
-    font-weight: 600;
-}
-
-.card-body-nerdvana {
-    padding: 20px;
-}
-
-/* Forms */
-.form-control-nerdvana {
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 12px 16px;
-    font-size: 1rem;
-    transition: var(--transition-medium);
-    background: white;
-}
-
-.form-control-nerdvana:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
-}
-
-.form-label-nerdvana {
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 8px;
-    display: block;
-}
-
-/* Alerts */
-.alert-nerdvana {
-    padding: 16px 20px;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.alert-success-nerdvana {
-    background-color: rgba(39, 174, 96, 0.1);
-    border-color: var(--success-color);
-    color: var(--success-color);
-}
-
-.alert-warning-nerdvana {
-    background-color: rgba(243, 156, 18, 0.1);
-    border-color: var(--warning-color);
-    color: var(--warning-color);
-}
-
-.alert-error-nerdvana {
-    background-color: rgba(231, 76, 60, 0.1);
-    border-color: var(--error-color);
-    color: var(--error-color);
-}
-
-/* Loading States */
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    text-align: center;
-}
-
-.spinner-nerdvana {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255, 107, 53, 0.3);
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes slideInRight {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes bounceIn {
-    0%, 20%, 40%, 60%, 80% {
-        transform: translateY(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.6s ease-out;
-}
-
-.animate-slide-in-left {
-    animation: slideInLeft 0.6s ease-out;
-}
-
-.animate-slide-in-right {
-    animation: slideInRight 0.6s ease-out;
-}
-
-.animate-bounce-in {
-    animation: bounceIn 1s ease-out;
-}
-
-/* Navbar tweaks */
-.navbar-brand img {
-    height: 32px;
-}
-
-/* Hero */
+/* Immagini proporzionate e centrate */
 #heroCarousel img {
-    max-height: 360px;
-    object-fit: cover;
-    width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
 }
 
-/* Products */
-.product-img {
-    height: 180px;
-    object-fit: contain;
+/* ======== Sezione prodotti ======== */
+#sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-top: 2rem;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .container {
-        max-width: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+/* Card prodotto */
+.card.h-100 {
+  border: none;
+  border-radius: 16px;
+  box-shadow: var(--shadow-medium);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #ffffff;
 }
 
-@media (max-width: 768px) {
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.75rem; }
-    h3 { font-size: 1.5rem; }
-    h4 { font-size: 1.25rem; }
-
-    .btn-nerdvana,
-    .btn-outline-nerdvana {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-
-    .card-body-nerdvana {
-        padding: 15px;
-    }
-
-    .form-control-nerdvana {
-        padding: 10px 12px;
-        font-size: 0.9rem;
-    }
+.card.h-100:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-heavy);
 }
 
-@media (max-width: 576px) {
-    .container {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
-
-    .btn-nerdvana,
-    .btn-outline-nerdvana {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 10px;
-    }
+.card-title {
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
-/* Scroll Behavior */
-html {
-    scroll-behavior: smooth;
+.card-subtitle {
+  font-size: 0.9rem;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
+/* ======== Immagini prodotti uniformate ======== */
+.card.h-100 .card-img-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 280px;
+  background-color: #f8f8f8;
+  overflow: hidden;
 }
 
-::-webkit-scrollbar-track {
-    background: var(--light-bg);
+.card.h-100 .card-img-top img {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
+/* ======== Pulsanti ======== */
+.btn-nerdvana,
+.btn-outline-nerdvana {
+  font-size: 0.8rem;
+  border-radius: 20px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-color);
+#prevPage,
+#nextPage {
+  border-radius: 20px;
+  border-width: 2px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-/* Print Styles */
-@media print {
-    .no-print {
-        display: none !important;
-    }
+#prevPage:hover,
+#nextPage:hover {
+  background: var(--primary-color);
+  color: #fff;
+  transform: translateY(-2px);
+}
 
-    body {
-        color: black !important;
-        background: white !important;
-    }
+/* ======== Footer ======== */
+footer {
+  background: linear-gradient(135deg, #FFD700, #FFC700) !important;
+  color: #000 !important;
+  text-align: center;
+  padding: 25px 0;
+  font-size: 0.9rem;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+}
 
-    .card-nerdvana {
-        border: 1px solid #ccc !important;
-        box-shadow: none !important;
-    }
+footer a {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }

@@ -21,21 +21,18 @@ public class OrdineArticoloDao {
 
     // Metodo per salvare un nuovo ordine-articolo nel database
     public void addOrdineArticolo(OrdineArticolo ordineArticolo) throws SQLException {
-        //PreparedStatement serve per convertire la query in un formato comprensibile per il database, viene sempre messa a inizio metodo nei dao
         PreparedStatement ps = null;
-
+        String sql = "INSERT INTO ORDINE_ARTICOLO (ordine_id, articolo_id, quantita) VALUES (?, ?, ?)";
         try {
-            String sql = "INSERT INTO ORDINE_ARTICOLO (ordineId, articoloId, quantita) VALUES (?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineArticolo.getOrdineId());
             ps.setInt(2, ordineArticolo.getArticoloId());
             ps.setInt(3, ordineArticolo.getQuantita());
+
             ps.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            if (connection != null) {
-                connection.rollback();
-            }
+            try { if (connection != null) connection.rollback(); } catch (SQLException ignore) {}
             throw new SQLException("Errore nel salvataggio dell'ordine-articolo", e);
         } finally {
             try {
@@ -62,8 +59,8 @@ public class OrdineArticoloDao {
 
             if (rs.next()) {
                 ordineArticolo = new OrdineArticolo();
-                ordineArticolo.setOrdineId(rs.getInt("ordineId"));
-                ordineArticolo.setArticoloId(rs.getInt("articoloId"));
+                ordineArticolo.setOrdineId(rs.getInt("ordine_id"));
+                ordineArticolo.setArticoloId(rs.getInt("articolo_id"));
                 ordineArticolo.setQuantita(rs.getInt("quantita"));
             }
         } catch (SQLException e) {
@@ -86,15 +83,15 @@ public class OrdineArticoloDao {
         List<OrdineArticolo> ordineArticoli = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE ordineId = ?";
+            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE ordine_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 OrdineArticolo ordineArticolo = new OrdineArticolo();
-                ordineArticolo.setOrdineId(rs.getInt("ordineId"));
-                ordineArticolo.setArticoloId(rs.getInt("articoloId"));
+                ordineArticolo.setOrdineId(rs.getInt("ordine_id"));
+                ordineArticolo.setArticoloId(rs.getInt("articolo_id"));
                 ordineArticolo.setQuantita(rs.getInt("quantita"));
                 ordineArticoli.add(ordineArticolo);
             }
@@ -118,15 +115,15 @@ public class OrdineArticoloDao {
         List<OrdineArticolo> ordineArticoli = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE articoloId = ?";
+            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE articolo_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, articoloId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 OrdineArticolo ordineArticolo = new OrdineArticolo();
-                ordineArticolo.setOrdineId(rs.getInt("ordineId"));
-                ordineArticolo.setArticoloId(rs.getInt("articoloId"));
+                ordineArticolo.setOrdineId(rs.getInt("ordine_id"));
+                ordineArticolo.setArticoloId(rs.getInt("articolo_id"));
                 ordineArticolo.setQuantita(rs.getInt("quantita"));
                 ordineArticoli.add(ordineArticolo);
             }
@@ -150,7 +147,7 @@ public class OrdineArticoloDao {
         OrdineArticolo ordineArticolo = null;
 
         try {
-            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE ordineId = ? AND articoloId = ?";
+            String sql = "SELECT * FROM ORDINE_ARTICOLO WHERE ordine_id = ? AND articolo_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineId);
             ps.setInt(2, articoloId);
@@ -158,8 +155,8 @@ public class OrdineArticoloDao {
 
             if (rs.next()) {
                 ordineArticolo = new OrdineArticolo();
-                ordineArticolo.setOrdineId(rs.getInt("ordineId"));
-                ordineArticolo.setArticoloId(rs.getInt("articoloId"));
+                ordineArticolo.setOrdineId(rs.getInt("ordine_id"));
+                ordineArticolo.setArticoloId(rs.getInt("articolo_id"));
                 ordineArticolo.setQuantita(rs.getInt("quantita"));
             }
         } catch (SQLException e) {
@@ -188,8 +185,8 @@ public class OrdineArticoloDao {
 
             while (rs.next()) {
                 OrdineArticolo ordineArticolo = new OrdineArticolo();
-                ordineArticolo.setOrdineId(rs.getInt("ordineId"));
-                ordineArticolo.setArticoloId(rs.getInt("articoloId"));
+                ordineArticolo.setOrdineId(rs.getInt("ordine_id"));
+                ordineArticolo.setArticoloId(rs.getInt("articolo_id"));
                 ordineArticolo.setQuantita(rs.getInt("quantita"));
                 ordineArticoli.add(ordineArticolo);
             }
@@ -211,7 +208,7 @@ public class OrdineArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "UPDATE ORDINE_ARTICOLO SET ordineId=?, articoloId=?, quantita=? WHERE id=?";
+            String sql = "UPDATE ORDINE_ARTICOLO SET ordine_id=?, articolo_id=?, quantita=? WHERE id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ordineArticolo.getOrdineId());
             ps.setInt(2, ordineArticolo.getArticoloId());
@@ -286,7 +283,7 @@ public class OrdineArticoloDao {
         PreparedStatement ps = null;
 
         try {
-            String sql = "DELETE FROM ORDINE_ARTICOLO WHERE articoloId=?";
+            String sql = "DELETE FROM ORDINE_ARTICOLO WHERE articolo_id=?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, articoloId);
             ps.executeUpdate();

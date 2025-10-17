@@ -12,6 +12,7 @@ import Model.Enum.Tipo;
  */
 public class ArticoloDto {
     // Campi pubblici per facilitare la serializzazione JSON
+    public int id;
     public String numeroSeriale;
     public String nome;
     public String tipo;
@@ -28,6 +29,7 @@ public class ArticoloDto {
      */
     public static ArticoloDto from(Articolo a) {
         ArticoloDto d = new ArticoloDto();
+        d.id = a.getId();
         d.numeroSeriale = a.getNumeroSeriale();
         d.nome = a.getNome();
         Tipo t = a.getTipo();

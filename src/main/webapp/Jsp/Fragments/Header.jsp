@@ -1,5 +1,6 @@
 <%@ page import="Model.Enum.Tipo" %>
 <%@ page import="Model.Utente" %>
+<%@ page import="Model.Enum.Ruolo" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,8 +60,9 @@
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Jsp/Accessi/Registrazione.jsp">Registrazione</a></li>
             <%
               } else {
+                Utente user = (Utente) utente;
             %>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Jsp/Logged/AreaRiservata.jsp">Area Riservata</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}<%= (user.getRuolo() == Ruolo.admin) ? "/Jsp/Admin/AreaRiservata.jsp" : "/Jsp/Logged/AreaRiservata.jsp" %>">Area Riservata</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a id="logoutLink" class="dropdown-item" href="#">Logout</a></li>
             <%
@@ -76,6 +78,28 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+  // Handler universale per il logout: funziona su tutte le pagine anche senza jQuery
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('logoutLink');
+    if (link) {
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        // Usa il context path della webapp per costruire l'URL corretto
+        var url = '${pageContext.request.contextPath}/API/autenticazione/logout';
+        fetch(url, { method: 'POST', credentials: 'same-origin' })
+          .then(function(res){
+            // Se il server risponde 200, ricarica; altrimenti mostra errore generico
+            if (!res.ok) return res.json().then(function(j){ throw new Error((j && j.message) || 'Errore durante il logout'); }).catch(function(err){ throw err; });
+            location.reload();
+          })
+          .catch(function(err){
+            alert(err && err.message ? err.message : 'Errore durante il logout');
+          });
+      });
+    }
+  });
+</script>
 
 </body>
 </html>
