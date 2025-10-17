@@ -26,15 +26,13 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class wishlistServlet extends HttpServlet {
+public class WishlistServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final Gson gson = new GsonBuilder().create();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        //SE L'URL È "/ITEMS" CHIAMO LA FUNZIONE listItems che restituisce gli articoli
-        //che sono dentro la wishlist
+        // Consentiamo solo /items: la wishlist è gestita esclusivamente a livello DB per utenti autenticati
         String path = req.getPathInfo();
         if (path == null) path = "";
         if ("/items".equals(path)) {
@@ -68,8 +66,7 @@ public class wishlistServlet extends HttpServlet {
     // Richiede utente autenticato: la wishlist è salvata su DB (WISHLIST, WISHLIST_ARTICOLO)
     private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession s = req.getSession(true);
-        // in realtà questo campo che si chiama id è il numeroSeriale
-        String numeroSeriale = trim(req.getParameter("id"));
+        String numeroSeriale = trim(req.getParameter("id")); // nel frontend usiamo il numeroSeriale come id logico
         if (numeroSeriale == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.setContentType("application/json;charset=UTF-8");
@@ -85,12 +82,12 @@ public class wishlistServlet extends HttpServlet {
             return;
         }
 
+        // Persistenza su DB
         try (Connection conn = GestoreConnessioneDatabase.getConnection()) {
             WishListDao wlDao = new WishListDao(conn);
             WishListArticoloDao wlaDao = new WishListArticoloDao(conn);
             ArticoloDao artDao = new ArticoloDao(conn);
 
-            //se la wishlist non esiste la creo
             WishList wl = wlDao.getOrCreateWishListForUtente(utente.getId());
             // Ricavo l'articolo dal numero seriale
             Model.Articolo art = artDao.getArticoloByNumeroSeriale(numeroSeriale);
@@ -100,11 +97,10 @@ public class wishlistServlet extends HttpServlet {
                 resp.getWriter().write(gson.toJson(ApiResponse.error("Articolo non trovato")));
                 return;
             }
-            // Se il prodotto non esiste nella wishlist allora lo aggiungo
+            // Evito duplicati
             if (!wlaDao.existsWishListArticolo(wl.getId(), art.getId())) {
                 wlaDao.addWishListArticolo(new Model.WishListArticolo(wl.getId(), art.getId()));
             }
-
             resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write(gson.toJson(ApiResponse.okMessage("ok")));
         } catch (SQLException e) {
@@ -166,7 +162,6 @@ public class wishlistServlet extends HttpServlet {
         return s == null ? null : (s.trim().isEmpty() ? null : s.trim());
     }
 
-    //QUESTA VA MESSA NEL DAO, HO FATTO IN FRETTA PERDONAMI
     private void listItems(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession s = req.getSession(true);
         Utente utente = (Utente) s.getAttribute("utente");

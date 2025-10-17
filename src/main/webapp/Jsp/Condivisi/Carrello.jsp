@@ -13,7 +13,9 @@
     <h3 class="mb-3">Il tuo carrello</h3>
 
     <!-- Contenitori popolati via AJAX da Script/cart.js -->
-    <div id="cartEmpty" class="alert alert-warning-nerdvana" style="display:none">Il carrello è vuoto.</div>
+    <div id="cartEmpty" class="alert alert-warning-nerdvana" style="display:none">
+      Il carrello è vuoto.
+    </div>
     <div id="cartError" class="alert alert-error-nerdvana" style="display:none"></div>
 
     <div class="table-responsive">
@@ -38,13 +40,25 @@
       </table>
     </div>
 
-    <div class="mt-3">
-      <a href="../../index.jsp" class="btn btn-outline-secondary">Continua lo shopping</a>
+    <!-- Pulsanti azione -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <a href="../../index.jsp" class="btn btn-outline-secondary">
+        Continua lo shopping
+      </a>
+
+      <!-- 🔹 Nuovo pulsante per completare l’ordine -->
+      <form action="../../Jsp/Ordine/Checkout.jsp" method="GET" class="m-0">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-credit-card"></i> Completa ordine
+        </button>
+      </form>
     </div>
   </div>
 
   <!-- jQuery necessario per le chiamate AJAX del carrello -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+          crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../Script/cart.js"></script>
 </body>

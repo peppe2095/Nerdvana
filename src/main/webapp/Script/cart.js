@@ -4,6 +4,7 @@
 (function(){
   // Selettore rapido: ritorna il primo elemento che matcha il selettore CSS
   const qs = (sel, root=document) => root.querySelector(sel);
+  const qsa = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
   // Al caricamento della pagina, recuperiamo il contenuto del carrello
   document.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +27,17 @@
     });
   }
 
+      
+      
+    }).done(function(out){
+      if (!out || out.success === false) return showError(out && out.message);
+      alert('Ordine effettuato con successo!');
+      loadCart(); // Ricarica il carrello (dovrebbe essere vuoto ora)
+    }).fail(function(jq){
+      const msg = (jq.responseJSON && jq.responseJSON.message) || 'Errore nel processo di checkout';
+      showError(msg);
+    });
+  }
   // Renderizza la tabella del carrello partendo dalla lista di righe [{articolo: ArticoloDto, qty: number}, ...]
   function renderCart(items) {
     const body = qs('#cartBody');
