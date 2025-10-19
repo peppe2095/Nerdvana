@@ -7,7 +7,6 @@ import Dao.*;
 import Dto.ApiResponse;
 import Model.Articolo;
 import Model.Enum.Stato;
-import Model.Fattura;
 import Model.Ordine;
 import Model.OrdineArticolo;
 import Model.Utente;
@@ -87,6 +86,7 @@ public class ordineServlet extends HttpServlet {
                 cardId = Integer.parseInt(cardParam.trim());
             }
         } catch (NumberFormatException ignored) {}
+
         // Dati per pagamento con carta non salvata (opzionale)
         nomeTitolare = req.getParameter("nomeTitolare");
         numeroCarta = req.getParameter("numeroCarta");
@@ -96,11 +96,12 @@ public class ordineServlet extends HttpServlet {
         // Se non viene passato un cardId, richiediamo i dati minimi della carta one-shot
         if (cardId == null) {
             if (nomeTitolare == null || numeroCarta == null || cvv == null || scadenza == null ||
-                nomeTitolare.trim().isEmpty() || numeroCarta.trim().isEmpty() || cvv.trim().isEmpty() || scadenza.trim().isEmpty()) {
+                    nomeTitolare.trim().isEmpty() || numeroCarta.trim().isEmpty() || cvv.trim().isEmpty() || scadenza.trim().isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().write(gson.toJson(ApiResponse.error("Dati della carta mancanti. Seleziona una carta salvata o inserisci i dati della nuova carta.")));
                 return;
             }
+
             // Normalizza numero carta (solo cifre) e semplici validazioni
             numeroCarta = numeroCarta.replaceAll("\\s+", "");
             if (!numeroCarta.matches("\\d{16}")) {
@@ -113,14 +114,12 @@ public class ordineServlet extends HttpServlet {
                 resp.getWriter().write(gson.toJson(ApiResponse.error("Il CVV deve contenere 3 cifre")));
                 return;
             }
-            // scadenza formattata come yyyy-MM o yyyy-MM-dd; non effettuiamo parsing rigoroso qui
         }
 
         try (Connection conn = GestoreConnessioneDatabase.getConnection()) {
             ArticoloDao articoloDao = new ArticoloDao(conn);
             OrdineDao ordineDao = new OrdineDao(conn);
             OrdineArticoloDao ordineArticoloDao = new OrdineArticoloDao(conn);
-            FatturaDao fatturaDao = new FatturaDao(conn);
 
             // Calcola totale e numero articoli, e prepara mapping articoloId->qty
             double totale = 0.0;
@@ -175,45 +174,12 @@ public class ordineServlet extends HttpServlet {
                 ordineArticoloDao.addOrdineArticolo(oa);
             }
 
-            // Prepara riepilogo ordine per fattura
-            List<Map<String, Object>> itemsSummary = new ArrayList<>();
-            for (Map.Entry<Integer, Integer> r : righe.entrySet()) {
-                Articolo art = articoloDao.getArticoloById(r.getKey());
-                if (art != null) {
-                    Map<String, Object> it = new HashMap<>();
-                    it.put("nome", art.getNome());
-                    it.put("prezzo", art.getPrezzo());
-                    it.put("qty", r.getValue());
-                    itemsSummary.add(it);
-                }
-            }
-            String metodoPagamento;
-            if (cardId != null) {
-                metodoPagamento = "Carta salvata";
-            } else {
-                String last4 = (numeroCarta != null && numeroCarta.length() >= 4) ? numeroCarta.substring(numeroCarta.length() - 4) : "****";
-                metodoPagamento = "Carta temporanea **** **** **** " + last4;
-            }
-            Map<String, Object> riepilogoMap = new LinkedHashMap<>();
-            riepilogoMap.put("ordineId", ordineId);
-            riepilogoMap.put("totale", totale);
-            riepilogoMap.put("numeroArticoli", numArticoli);
-            riepilogoMap.put("metodoPagamento", metodoPagamento);
-            riepilogoMap.put("items", itemsSummary);
-            String riepilogoJson = gson.toJson(riepilogoMap);
-
-            // Crea fattura con URL del PDF generato dinamicamente dalla nuova servlet
-            Fattura fattura = new Fattura();
-            fattura.setOrdineId(ordineId);
-            String fatturaUrl = req.getContextPath() + "/api/invoice/pdf?orderId=" + ordineId;
-            fattura.setUrlFattura(fatturaUrl);
-
-            fatturaDao.addFattura(fattura);
-
             // Svuota carrello
             session.setAttribute("carrello", new HashMap<String, Integer>());
 
+            String fatturaUrl = req.getContextPath() + "/api/invoice/pdf?orderId=" + ordineId;
             String summaryUrl = req.getContextPath() + "/Jsp/order-summary.jsp?orderId=" + ordineId;
+
             Map<String, Object> data = new HashMap<>();
             data.put("orderId", ordineId);
             data.put("summaryUrl", summaryUrl);
@@ -244,7 +210,6 @@ public class ordineServlet extends HttpServlet {
 
         try (Connection conn = GestoreConnessioneDatabase.getConnection()) {
             OrdineDao ordineDao = new OrdineDao(conn);
-            FatturaDao fatturaDao = new FatturaDao(conn);
             OrdineArticoloDao ordineArticoloDao = new OrdineArticoloDao(conn);
             ArticoloDao articoloDao = new ArticoloDao(conn);
 
@@ -265,11 +230,12 @@ public class ordineServlet extends HttpServlet {
                 items.add(row);
             }
 
-            Model.Fattura fattura = fatturaDao.getFatturaByOrdineId(orderId);
+            String fatturaUrl = req.getContextPath() + "/api/invoice/pdf?orderId=" + orderId;
+
             Map<String, Object> data = new HashMap<>();
             data.put("ordine", ordine);
             data.put("items", items);
-            data.put("fatturaUrl", fattura != null ? fattura.getUrlFattura() : null);
+            data.put("fatturaUrl", fatturaUrl);
 
             resp.getWriter().write(gson.toJson(ApiResponse.ok(data)));
         } catch (SQLException e) {
@@ -289,7 +255,6 @@ public class ordineServlet extends HttpServlet {
         Utente utente = (Utente) session.getAttribute("utente");
         try (Connection conn = GestoreConnessioneDatabase.getConnection()) {
             OrdineDao ordineDao = new OrdineDao(conn);
-            FatturaDao fatturaDao = new FatturaDao(conn);
             List<Model.Ordine> ordini = ordineDao.getOrdiniByUtenteId(utente.getId());
             List<Map<String, Object>> out = new ArrayList<>();
             for (Model.Ordine o : ordini) {
@@ -299,8 +264,7 @@ public class ordineServlet extends HttpServlet {
                 m.put("importo", o.getImporto());
                 m.put("stato", o.getStato() != null ? o.getStato().name() : null);
                 m.put("dataCreazione", o.getDataCreazione());
-                Model.Fattura f = fatturaDao.getFatturaByOrdineId(o.getId());
-                m.put("fatturaUrl", f != null ? f.getUrlFattura() : null);
+                m.put("fatturaUrl", req.getContextPath() + "/api/invoice/pdf?orderId=" + o.getId());
                 out.add(m);
             }
             resp.getWriter().write(gson.toJson(ApiResponse.ok(out)));

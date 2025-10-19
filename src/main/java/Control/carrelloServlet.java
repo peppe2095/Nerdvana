@@ -1,5 +1,6 @@
 package Control;
 
+import Model.Utente;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import Dto.ApiResponse;
@@ -27,6 +28,14 @@ public class carrelloServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Blocco accesso per admin: l'admin non deve usare carrello
+        Object ut = req.getSession(true).getAttribute("utente");
+        if (ut instanceof Model.Utente && ((Model.Utente) ut).getRuolo() == Model.Enum.Ruolo.admin) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            resp.setContentType("application/json;charset=UTF-8");
+            resp.getWriter().write(gson.toJson(ApiResponse.error("Funzionalità non disponibile per admin")));
+            return;
+        }
         // Questo metodo gestisce le richieste GET verso la servlet del carrello
         // Ci sono due possibili endpoint:
         // 1. /api/cart/items -> restituisce lista dettagliata degli articoli con quantità 
@@ -98,6 +107,14 @@ public class carrelloServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Blocco accesso per admin: l'admin non deve usare carrello
+        Utente utente = (Utente) req.getSession(true).getAttribute("utente");
+        if (utente.getRuolo() == Model.Enum.Ruolo.admin) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            resp.setContentType("application/json;charset=UTF-8");
+            resp.getWriter().write(gson.toJson(ApiResponse.error("Funzionalità non disponibile per admin")));
+            return;
+        }
         String path = req.getPathInfo();
         if (path == null) path = "";
         switch (path) {

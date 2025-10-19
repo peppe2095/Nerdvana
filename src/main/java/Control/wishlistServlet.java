@@ -33,6 +33,15 @@ public class wishlistServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        // Blocco accesso per admin: l'admin non deve usare wishlist
+        Utente utente = (Utente) req.getSession(true).getAttribute("utente");
+        if (utente.getRuolo() == Model.Enum.Ruolo.admin) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            resp.setContentType("application/json;charset=UTF-8");
+            resp.getWriter().write(gson.toJson(ApiResponse.error("Funzionalità non disponibile per admin")));
+            return;
+        }
+
         //SE L'URL È "/ITEMS" CHIAMO LA FUNZIONE listItems che restituisce gli articoli
         //che sono dentro la wishlist
         String path = req.getPathInfo();

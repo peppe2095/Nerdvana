@@ -37,6 +37,16 @@
       </ul>
 
       <ul class="navbar-nav ms-auto align-items-center">
+        <%
+          Utente utenteHeader = (Utente) session.getAttribute("utente");
+          boolean isAdmin = false;
+          if (utenteHeader != null) {
+            try {
+              isAdmin = (utenteHeader.getRuolo() == Model.Enum.Ruolo.admin);
+            } catch (Exception ignore) {}
+          }
+          if (!isAdmin) {
+        %>
         <li class="nav-item me-2">
           <a class="nav-link" href="${pageContext.request.contextPath}/Jsp/Condivisi/WishList.jsp" title="Wishlist">
             <img src="${pageContext.request.contextPath}/Image/wishList.jpg" alt="Wishlist" height="24">
@@ -47,6 +57,7 @@
             <img src="${pageContext.request.contextPath}/Image/carrello.jpg" alt="Carrello" height="24">
           </a>
         </li>
+        <% } %>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="${pageContext.request.contextPath}/Image/utente.jpg" alt="Utente" height="28" class="rounded-circle me-2"> Account

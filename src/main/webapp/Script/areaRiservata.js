@@ -302,6 +302,11 @@
                         const modalEl = qs('#modalAddCarta');
                         const modal = bootstrap.Modal.getInstance(modalEl);
                         if (modal) modal.hide();
+                        const backdrops = qsa('.modal-backdrop');
+                        backdrops.forEach(backdrop => backdrop.remove());
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
                         
                         // Aggiorna la visualizzazione delle carte
                         const data = response.data || response;
