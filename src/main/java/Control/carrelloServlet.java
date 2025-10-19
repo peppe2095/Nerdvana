@@ -131,6 +131,9 @@ public class carrelloServlet extends HttpServlet {
         }
     }
 
+    
+    
+    
     private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession s = req.getSession(true);
         Map<String, Integer> cart = getCart(s);

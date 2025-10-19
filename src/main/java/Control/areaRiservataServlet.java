@@ -113,7 +113,7 @@ public class areaRiservataServlet extends HttpServlet {
                 ApiResponse.error("Errore nel recupero dei dati: " + e.getMessage())
             ));
         }
-    }
+    } 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
