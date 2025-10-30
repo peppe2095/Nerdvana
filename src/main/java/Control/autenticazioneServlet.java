@@ -150,11 +150,7 @@ public class autenticazioneServlet extends HttpServlet {
             
             System.out.println("ho creato utenteDao per login");
             Utente utente = utenteDao.getUtenteByEmail(email);
-<<<<<<< HEAD
-           
-=======
-            //!PasswordUtils.checkPassword(password, utente.getPasswordHash())
->>>>>>> 342ab423170d2aa884654f4550571ddc32ad0d8b
+
             if (utente == null || !PasswordUtils.checkPassword(password, utente.getPasswordHash())) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
